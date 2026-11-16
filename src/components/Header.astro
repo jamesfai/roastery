@@ -1,6 +1,7 @@
 ---
 import { WP_URL, wcUrl } from '../lib/wp';
 const logo = `${WP_URL}/wp-content/uploads/2024/09/daily-grind-roastery-logo.webp`;
+const path = Astro.url.pathname;
 const nav = [
   { label: 'Retail', href: '/coffee-beans-retail/', children: [
     { label: 'Single Origin', href: '/coffee-beans-retail/single-origin/' },
@@ -10,48 +11,57 @@ const nav = [
     { label: 'Single Origin', href: '/wholesale-coffee-beans/single-origin/' },
     { label: 'House Blend', href: '/wholesale-coffee-beans/house-blend/' } ] },
   { label: 'Brewing Guides', href: '/brewing-guides/' },
-  { label: 'About Us', href: '/about-us/' },
+  { label: 'About', href: '/about-us/' },
   { label: 'Contact', href: '/contact-us/' },
 ];
+const active = (href: string) => path === href || (href !== '/' && path.startsWith(href));
 ---
+<a class="skip" href="#main">Skip to content</a>
 <header class="site-header">
-  <div class="wrap bar">
-    <a href="/" class="logo" aria-label="Daily Grind Roastery home"><img src={logo} alt="Daily Grind Roastery" height="48" /></a>
-    <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-label="Toggle menu" />
-    <label for="nav-toggle" class="burger" aria-hidden="true"><span></span></label>
-    <nav>
+  <div class="frame bar pad">
+    <a href="/" class="logo" aria-label="Daily Grind Roastery home"><img src={logo} alt="Daily Grind Roastery" height="44" width="123" /></a>
+    <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-label="Open menu" />
+    <label for="nav-toggle" class="burger"><span class="sr">Menu</span><i></i></label>
+    <nav aria-label="Main">
       <ul>
         {nav.map((n) => (
           <li class={n.children ? 'has-sub' : ''}>
-            <a href={n.href}>{n.label}</a>
+            <a href={n.href} aria-current={active(n.href) ? 'page' : undefined}>{n.label}</a>
             {n.children && <ul class="sub">{n.children.map((c) => <li><a href={c.href}>{c.label}</a></li>)}</ul>}
           </li>
         ))}
-        <li><a href={wcUrl.account}>My Account</a></li>
-        <li><a class="btn cart" href={wcUrl.cart}>Cart</a></li>
+        <li><a href={wcUrl.account}>Account</a></li>
+        <li><a class="btn sm" href={wcUrl.cart}>Cart</a></li>
       </ul>
     </nav>
   </div>
 </header>
 <style>
-  .site-header { position: sticky; top: 0; z-index: 50; background: rgba(255,250,243,.94); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
-  .bar { display: flex; align-items: center; justify-content: space-between; min-height: 72px; gap: 20px; }
-  .logo img { height: 48px; width: auto; }
-  nav > ul { display: flex; align-items: center; gap: 4px; list-style: none; margin: 0; padding: 0; }
-  nav a { text-decoration: none; padding: 8px 12px; font-weight: 500; font-size: .95rem; border-radius: 8px; display: block; }
-  nav a:hover { color: var(--caramel-dark); }
-  .btn.cart { padding: .5em 1.2em; color: #fff; margin-left: 6px; }
+  .skip { position: absolute; left: -999px; top: 8px; background: var(--yellow); padding: 8px 14px; z-index: 100; font-weight: 600; }
+  .skip:focus { left: 8px; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .site-header { position: sticky; top: 0; z-index: 50; background: var(--white); border-bottom: 1px solid var(--ln); }
+  .bar { display: flex; align-items: center; justify-content: space-between; min-height: 76px; gap: 20px; }
+  .logo img { height: 44px; width: auto; }
+  nav > ul { display: flex; align-items: center; gap: 2px; list-style: none; margin: 0; padding: 0; }
+  nav a:not(.btn) { text-decoration: none; padding: 10px 14px; font-weight: 500; font-size: .95rem; display: block; border-bottom: 2px solid transparent; }
+  nav a:not(.btn):hover, nav a[aria-current] { border-bottom-color: var(--ink); }
+  nav .btn { margin-left: 10px; }
   .has-sub { position: relative; }
-  .sub { position: absolute; top: 100%; left: 0; min-width: 190px; background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 6px; list-style: none; margin: 0; box-shadow: 0 12px 30px rgba(36,22,15,.12); opacity: 0; visibility: hidden; transform: translateY(6px); transition: .18s; }
-  .has-sub:hover .sub, .has-sub:focus-within .sub { opacity: 1; visibility: visible; transform: none; }
+  .sub { position: absolute; top: 100%; left: 0; min-width: 200px; background: var(--white); border: 1px solid var(--ink); padding: 6px; list-style: none; margin: 0; opacity: 0; visibility: hidden; transition: opacity .15s; }
+  .has-sub:hover .sub, .has-sub:focus-within .sub { opacity: 1; visibility: visible; }
+  .sub a { border-bottom: 0 !important; } .sub a:hover { background: var(--yellow); }
   .nav-toggle, .burger { display: none; }
-  @media (max-width: 900px) {
-    .burger { display: block; cursor: pointer; padding: 12px; }
-    .burger span, .burger span::before, .burger span::after { display: block; width: 24px; height: 2px; background: var(--espresso); position: relative; content: ''; }
-    .burger span::before { position: absolute; top: -7px; } .burger span::after { position: absolute; top: 7px; }
-    nav { display: none; position: absolute; top: 100%; left: 0; right: 0; background: var(--paper); border-bottom: 1px solid var(--line); padding: 10px 20px 20px; max-height: 80vh; overflow: auto; }
+  @media (max-width: 920px) {
+    .burger { display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; cursor: pointer; border: 1.5px solid var(--ink); }
+    .burger i, .burger i::before, .burger i::after { display: block; width: 22px; height: 2px; background: var(--ink); position: relative; }
+    .burger i::before, .burger i::after { content: ''; position: absolute; left: 0; } .burger i::before { top: -7px; } .burger i::after { top: 7px; }
+    .nav-toggle:focus-visible + .burger { outline: 2px solid var(--ink); outline-offset: 3px; }
+    nav { display: none; position: absolute; top: 100%; left: 0; right: 0; background: var(--white); border-bottom: 1px solid var(--ink); padding: 8px var(--pad) 24px; max-height: calc(100dvh - 76px); overflow: auto; }
     .nav-toggle:checked ~ nav { display: block; }
     nav > ul { flex-direction: column; align-items: stretch; }
-    .sub { position: static; opacity: 1; visibility: visible; transform: none; border: 0; box-shadow: none; padding: 0 0 0 14px; }
+    nav a:not(.btn) { padding: 14px 0; border-bottom: 1px solid var(--ln); }
+    .sub { position: static; opacity: 1; visibility: visible; border: 0; padding: 0 0 0 16px; }
+    nav .btn { margin: 12px 0 0; }
   }
 </style>

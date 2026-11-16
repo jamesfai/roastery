@@ -9,30 +9,31 @@ export async function getStaticPaths() {
   );
 }
 const { c, products } = Astro.props;
-const subs = collections.filter((x) => x.path.startsWith(c.path.split('/')[0]) && x.path !== c.path && (c.path.includes('/') ? false : true));
-const crumbs = c.path.includes('/') ? collections.find((x) => x.path === c.path.split('/')[0]) : undefined;
+const top = c.path.split('/')[0];
+const parent = c.path.includes('/') ? collections.find((x) => x.path === top) : undefined;
+const subs = parent ? [] : collections.filter((x) => x.path.startsWith(`${top}/`));
 ---
 <Base title={c.title} description={c.blurb}>
-  <section class="head">
-    <div class="wrap">
-      {crumbs && <p class="eyebrow"><a href={`/${crumbs.path}/`}>{crumbs.title}</a> /</p>}
+  <header class="page-head">
+    <div class="frame">
+      {parent && <p class="crumb"><a href={`/${parent.path}/`}>{parent.title}</a></p>}
       <h1>{c.title}</h1>
       <p>{c.blurb}</p>
-      {subs.length > 0 && <p class="subs">{subs.map((s) => <a class="chip" href={`/${s.path}/`}>{s.title}</a>)}</p>}
+      {subs.length > 0 && <ul class="chips">{subs.map((s) => <li><a href={`/${s.path}/`}>{s.title}</a></li>)}</ul>}
     </div>
-  </section>
-  <section class="section">
-    <div class="wrap">
-      <p class="count">{products.length} products</p>
-      <div class="grid">{products.map((p) => <ProductCard product={p} />)}</div>
+  </header>
+  <section class="band">
+    <div class="frame lines">
+      <p class="count pad">{products.length} {products.length === 1 ? 'product' : 'products'}</p>
+      <div class="grid4">{products.map((p) => <ProductCard product={p} />)}</div>
     </div>
   </section>
 </Base>
 <style>
-  .head { background: var(--cream); padding: 56px 0 40px; border-bottom: 1px solid var(--line); }
-  .head h1 { font-size: clamp(2rem, 4vw, 3rem); } .head p { color: var(--muted); max-width: 60ch; }
-  .eyebrow a { text-decoration: none; }
-  .chip { display: inline-block; margin: 6px 8px 0 0; padding: 6px 16px; border: 1.5px solid var(--line); border-radius: 999px; text-decoration: none; color: var(--espresso); background: #fff; font-weight: 500; }
-  .chip:hover { border-color: var(--caramel); color: var(--caramel-dark); }
-  .count { color: var(--muted); margin: 0 0 20px; }
+  .band { padding: 0 0 clamp(48px, 7vw, 88px); }
+  .count { margin: 0; padding-top: 28px; padding-bottom: 20px; color: var(--muted); }
+  .chips { list-style: none; display: flex; flex-wrap: wrap; gap: 10px; margin: 28px 0 0; padding: 0; }
+  .chips a { display: inline-block; padding: 8px 18px; border: 1.5px solid var(--ink); text-decoration: none; font-weight: 500; min-height: 44px; line-height: 28px; }
+  .chips a:hover { background: var(--yellow); }
+  .grid4 :global(.card) { height: 100%; }
 </style>

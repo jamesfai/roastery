@@ -1,93 +1,149 @@
 ---
 import Base from '../layouts/Base.astro';
 import ProductCard from '../components/ProductCard.astro';
-import { getProducts } from '../lib/wp';
+import { getProducts, photos, guides, productsIn } from '../lib/wp';
 
 const all = await getProducts();
-const featuredSlugs = ['nicaragua-shg', 'sumatra-mandheling', 'ethiopia-yirgacheffe', 'guatemala'];
-const featured = featuredSlugs.map((s) => all.find((p) => p.slug === s)).filter((p) => !!p);
-const tiles = [
-  { t: 'Shop Now', href: '/coffee-beans-retail/', img: all.find((p) => p.slug === 'caramelo')?.images[0]?.src },
-  { t: 'Single Origin', href: '/coffee-beans-retail/single-origin/', img: all.find((p) => p.slug === 'colombia-supremo')?.images[0]?.src },
-  { t: 'House Blend', href: '/coffee-beans-retail/house-blend/', img: all.find((p) => p.slug === 'bliss')?.images[0]?.src },
+const featured = ['nicaragua-shg', 'sumatra-mandheling', 'ethiopia-yirgacheffe', 'guatemala']
+  .map((s) => all.find((p) => p.slug === s)).filter((p) => !!p);
+const wholesale = (await productsIn('single-origin-wholesale')).slice(0, 4);
+
+const mosaic = [
+  { src: photos.beans, alt: 'Roasted coffee beans', h: 200 },
+  { src: photos.drip, alt: 'Hot water poured over ground coffee', h: 280 },
+  { src: photos.barista, alt: 'Barista filling a portafilter with ground coffee', h: 400 },
+  { src: photos.brewing, alt: 'Coffee brewing into a cup', h: 240 },
+  { src: photos.steam, alt: 'Steam rising from freshly roasted coffee', h: 320 },
 ];
-const features = [
-  ['01', 'Small-batch Roasting', 'Every batch is roasted to order so your beans arrive at peak freshness.'],
-  ['02', 'Specialty Coffee Supply', 'Reliable bulk supply for cafés, retailers and businesses nationwide.'],
-  ['03', 'Custom Coffee Branding', 'Custom blends, packaging and labeling to make the coffee yours.'],
+const paths = [
+  { t: 'Single Origin', d: 'One farm region per bag. Taste where it grew.', href: '/coffee-beans-retail/single-origin/', icon: 'bean' },
+  { t: 'House Blend', d: 'Balanced blends made for everyday cups.', href: '/coffee-beans-retail/house-blend/', icon: 'cup' },
+  { t: 'Drip Coffee', d: 'Single-serve drip bags. Add hot water.', href: '/coffee-beans-retail/drip-coffee/', icon: 'drip' },
+  { t: 'Brewing Guides', d: 'Step-by-step methods, from espresso to cold brew.', href: '/brewing-guides/', icon: 'kettle' },
 ];
 ---
 <Base title="Freshly Roasted Coffee Beans | Daily Grind Roastery">
+  <!-- Hero -->
   <section class="hero">
-    <div class="wrap">
-      <p class="eyebrow">Small-batch · Laguna, Philippines</p>
-      <h1>Expertly roasted coffee beans for every brew.</h1>
-      <p class="lead">Whether you're brewing at home or running a café, our freshly roasted beans are crafted to bring out the best in every cup.</p>
-      <div class="cta"><a class="btn" href="/coffee-beans-retail/">Explore Our Coffee</a> <a class="btn ghost" href="/wholesale-coffee-beans/">Wholesale</a></div>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="wrap">
-      <div class="section-head">
-        <div><p class="eyebrow">Fan favorites</p><h2>Our Best-Selling Roasts</h2></div>
-        <a class="btn ghost dark" href="/coffee-beans-retail/">Shop All Roasts</a>
+    <div class="frame lines">
+      <div class="hero-top pad">
+        <h1>Expertly roasted coffee beans for every brew.</h1>
+        <div class="hero-side">
+          <p>Whether you're brewing at home or running a café, our freshly roasted beans bring out the best in every cup.</p>
+          <a class="btn" href="/coffee-beans-retail/">Explore our coffee</a>
+        </div>
       </div>
-      <div class="grid">{featured.map((p) => <ProductCard product={p!} />)}</div>
-    </div>
-  </section>
-
-  <section class="section alt">
-    <div class="wrap tiles">
-      {tiles.map((t) => (
-        <a href={t.href} class="tile" style={t.img ? `background-image:linear-gradient(180deg,rgba(36,22,15,.1),rgba(36,22,15,.75)),url(${t.img})` : ''}>
-          <span>{t.t}</span>
-        </a>
-      ))}
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="wrap split">
-      <div>
-        <p class="eyebrow">For businesses</p>
-        <h2>Your Trusted Partner for Premium Coffee Solutions</h2>
-        <p>Built for café owners, retailers and corporate clients who care about what's in the cup. From artisanal roasting to custom branding, we make great coffee easy to run with.</p>
-        <a class="btn" href="/wholesale-coffee-beans/">Order Now</a>
+      <div class="mosaic" aria-hidden="false">
+        {mosaic.map((m) => <img src={m.src} alt={m.alt} style={`height:${m.h}px`} width="400" height={m.h} loading={m.h > 300 ? 'eager' : 'lazy'} />)}
       </div>
-      <ol class="features">
-        {features.map(([n, t, d]) => <li><span class="n">{n}</span><div><h3>{t}</h3><p>{d}</p></div></li>)}
-      </ol>
     </div>
   </section>
 
-  <section class="band">
-    <div class="wrap">
-      <h2>Delivering satisfaction to coffee lovers, from retail shoppers to wholesale buyers.</h2>
-      <p>Join us for some brew-tiful moments!</p>
-      <a class="btn" href="/coffee-beans-retail/">Discover Now</a>
+  <!-- Where to start + wholesale supply -->
+  <section class="band ink">
+    <div class="frame lines on-ink">
+      <h2 class="pad lead-h">What would you like to brew today?</h2>
+      <div class="grid4 paths">
+        {paths.map((p) => (
+          <a class="path" href={p.href}>
+            <svg viewBox="0 0 48 48" width="44" height="44" fill="none" stroke="#faee8a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              {p.icon === 'bean' && <><ellipse cx="24" cy="24" rx="12" ry="17" transform="rotate(35 24 24)" /><path d="M16 36c9-6 11-14 16-24" /></>}
+              {p.icon === 'cup' && <><path d="M8 18h26v10a10 10 0 0 1-10 10h-6A10 10 0 0 1 8 28z" /><path d="M34 21h4a4 4 0 0 1 0 8h-5" /><path d="M16 8v4M24 8v4" /></>}
+              {p.icon === 'drip' && <><path d="M10 12h28l-6 14H16z" /><path d="M24 30v2" /><path d="M14 40h20" /><path d="M18 36h12" /></>}
+              {p.icon === 'kettle' && <><path d="M12 20h22l2 18H10z" /><path d="M18 20c0-6 4-8 6-8s6 2 6 8" /><path d="M36 24c5 0 6 8 0 8" /></>}
+            </svg>
+            <h3>{p.t}</h3>
+            <p class="muted">{p.d}</p>
+            <span class="more">See all</span>
+          </a>
+        ))}
+      </div>
+
+      <div class="supply-head pad">
+        <h2>Supply for cafés and retailers</h2>
+        <a class="btn outline" href="/wholesale-coffee-beans/">Shop wholesale</a>
+      </div>
+      <div class="grid4 cards">{wholesale.map((p) => <ProductCard product={p} dark />)}</div>
+    </div>
+  </section>
+
+  <!-- Learn to brew -->
+  <section class="band learn">
+    <div class="frame lines">
+      <div class="learn-grid">
+        <div class="learn-text">
+          <h2>Learn to brew a better cup</h2>
+          <a class="btn outline" href="/brewing-guides/">All brewing guides</a>
+          <ul class="guides">
+            {guides.map((g) => (
+              <li>
+                <a href={g.href}>
+                  <img src={g.img} alt="" width="96" height="68" loading="lazy" />
+                  <span><strong>{g.title}</strong><small class="muted">{g.blurb}</small></span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div class="learn-photos">
+          <img src={photos.grinder} alt="Close-up of a vintage wooden coffee grinder" loading="lazy" width="400" height="300" />
+          <img src={photos.roasterOn} alt="Turning on the coffee roaster" loading="lazy" width="400" height="300" />
+          <img src={photos.drinking} alt="Enjoying a cup of coffee" loading="lazy" width="400" height="300" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Best sellers -->
+  <section class="band ink">
+    <div class="frame lines on-ink">
+      <div class="supply-head pad">
+        <h2>Our best-selling roasts</h2>
+        <a class="btn outline" href="/coffee-beans-retail/">Shop all roasts</a>
+      </div>
+      <div class="grid4 cards">{featured.map((p) => <ProductCard product={p!} dark />)}</div>
     </div>
   </section>
 </Base>
 
 <style>
-  .hero { background: radial-gradient(1200px 500px at 85% -10%, #5a3a26 0%, transparent 60%), var(--espresso); color: #fff; padding: clamp(72px, 12vw, 150px) 0; }
-  .hero .eyebrow { color: #e8b27d; }
-  .hero h1 { max-width: 15ch; }
-  .lead { font-size: 1.15rem; max-width: 52ch; color: #e9dccb; }
-  .cta { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 28px; }
-  .cta .ghost { color: #fff; }
-  .btn.ghost.dark { color: var(--espresso); } .btn.ghost.dark:hover { background: var(--espresso); color: #fff; }
-  .tiles { display: grid; gap: 20px; grid-template-columns: repeat(3, 1fr); }
-  .tile { aspect-ratio: 4/5; background-size: cover; background-position: center; border-radius: var(--radius); color: #fff; text-decoration: none; display: flex; align-items: end; padding: 24px; font-family: var(--serif); font-size: 1.6rem; text-transform: none; transition: transform .25s; background-color: var(--roast); }
-  .tile:hover { transform: translateY(-4px); }
-  .split { display: grid; gap: 56px; grid-template-columns: 1fr 1fr; align-items: center; }
-  .features { list-style: none; padding: 0; margin: 0; display: grid; gap: 20px; }
-  .features li { display: flex; gap: 18px; background: var(--cream); padding: 22px; border-radius: var(--radius); }
-  .features .n { font-family: var(--serif); font-size: 2rem; color: var(--caramel); line-height: 1; }
-  .features h3 { margin-bottom: .2em; } .features p { margin: 0; color: var(--muted); }
-  .band { background: var(--caramel); color: #fff; text-align: center; padding: 72px 0; }
-  .band h2 { max-width: 24ch; margin-inline: auto; }
-  .band .btn { background: var(--espresso); } .band .btn:hover { background: #000; }
-  @media (max-width: 800px) { .tiles { grid-template-columns: 1fr; } .tile { aspect-ratio: 16/9; } .split { grid-template-columns: 1fr; } }
+  .hero { padding-top: clamp(40px, 6vw, 72px); overflow: hidden; }
+  .hero-top { display: grid; grid-template-columns: 3fr 1.4fr; gap: clamp(24px, 5vw, 72px); align-items: start; padding-bottom: clamp(36px, 5vw, 64px); }
+  .hero-top h1 { margin: 0; max-width: 11ch; }
+  .hero-side { padding-top: .6rem; max-width: 36ch; }
+  .hero-side .btn { margin-top: .5rem; }
+  .mosaic { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; align-items: end; padding: 0; }
+  .mosaic img { width: 100%; object-fit: cover; }
+
+  .band { padding: 0; }
+  .lead-h { padding-top: clamp(48px, 7vw, 88px); padding-bottom: 36px; margin: 0; max-width: 20ch; }
+  .path { display: block; padding: 8px var(--pad) 56px; text-decoration: none; position: relative; }
+  .path svg { margin-bottom: 28px; }
+  .path h3 { border-left: 3px solid var(--yellow); padding-left: 12px; margin-bottom: .5em; }
+  .path p { font-size: .95rem; max-width: 26ch; }
+  .more { font-weight: 600; border-bottom: 1.5px solid currentColor; }
+  .path:hover .more { color: var(--yellow); }
+  .supply-head { display: flex; justify-content: space-between; align-items: end; gap: 20px; flex-wrap: wrap; padding-top: 56px; padding-bottom: 36px; border-top: 1px solid var(--ln-on-ink); margin: 0; }
+  .supply-head h2 { margin: 0; max-width: 16ch; }
+  .cards { padding-bottom: clamp(48px, 7vw, 88px); }
+  .cards :global(.card) { height: 100%; }
+
+  .learn-grid { display: grid; grid-template-columns: 1.5fr 1fr; }
+  .learn-text { padding: clamp(48px, 7vw, 88px) var(--pad); }
+  .learn-text h2 { max-width: 14ch; }
+  .guides { list-style: none; padding: 0; margin: 36px 0 0; display: grid; grid-template-columns: 1fr 1fr; gap: 0 28px; }
+  .guides a { display: flex; gap: 16px; align-items: center; text-decoration: none; padding: 16px 0; border-top: 1px solid var(--ln); }
+  .guides a:hover strong { text-decoration: underline; text-underline-offset: 3px; }
+  .guides img { width: 96px; height: 68px; object-fit: cover; background: var(--mist); flex: none; }
+  .guides span { display: flex; flex-direction: column; line-height: 1.35; } .guides small { font-size: .85rem; }
+  .learn-photos { display: grid; grid-template-columns: 1fr 1fr; grid-auto-rows: 1fr; }
+  .learn-photos img { width: 100%; height: 100%; object-fit: cover; min-height: 200px; }
+  .learn-photos img:nth-child(1) { grid-row: span 2; }
+
+  @media (max-width: 900px) {
+    .hero-top { grid-template-columns: 1fr; }
+    .mosaic { grid-template-columns: repeat(3, 1fr); } .mosaic img:nth-child(n+4) { display: none; }
+    .learn-grid { grid-template-columns: 1fr; } .learn-photos { grid-auto-rows: 180px; }
+  }
+  @media (max-width: 520px) { .guides { grid-template-columns: 1fr; } .mosaic { grid-template-columns: 1fr 1fr; } .mosaic img:nth-child(3) { display: none; } }
 </style>

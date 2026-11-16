@@ -98,6 +98,27 @@ export const wcUrl = {
   addToCart: (id: number) => `${WP_URL}/?add-to-cart=${id}`,
 };
 
+const up = (p: string) => `${WP_URL}/wp-content/uploads/${p}`;
+/** Lifestyle photos already in the WordPress media library. */
+export const photos = {
+  beans: up('2025/03/coffee-beans-1-1024x682.jpg'),
+  barista: up('2025/03/a-barista-meticulously-fills-a-portafilter-with-ground-coffee-taking-care-to-ensure-the-correct-mea-1024x682.jpg'),
+  brewing: up('2025/03/brewing-coffee-1024x683.jpg'),
+  drip: up('2025/04/pouring-water-into-ground-coffee-coffee-drip-bag-and-glass-1024x734.jpg'),
+  roaster: up('2025/03/traditional-coffee-roaster-with-coffee-beans-in-cylinder-1024x683.jpg'),
+  roasterOn: up('2025/03/turning-on-coffee-roaster-1024x682.jpg'),
+  grinder: up('2025/03/closeup-image-of-a-vintage-wooden-coffee-grinder-1024x682.jpg'),
+  drinking: up('2025/03/drinking-coffee-1024x682.jpg'),
+  steam: up('2024/11/steaming-roasted-coffee-1024x576.jpg'),
+};
+/** Brewing guide illustrations; guide pages still live on WordPress. */
+export const guides = [
+  { title: 'Espresso', blurb: 'Dose, tamp and pull a balanced shot.', img: up('2024/09/dailygrind-roastery-espresso.png'), href: `${WP_URL}/espresso-brewing-guide/` },
+  { title: 'Pour-over', blurb: 'A clean, bright cup with a V60.', img: up('2024/09/dailygrind-roastery-v60-dripper.png'), href: `${WP_URL}/pour-over-brewing-guide/` },
+  { title: 'French press', blurb: 'Full-bodied and simple to master.', img: up('2024/09/dailygrind-roastery-frenchpress.png'), href: `${WP_URL}/french-press-brewing-guide/` },
+  { title: 'Cold brew', blurb: 'Slow, smooth and low in acidity.', img: up('2024/09/dailygrind-roastery-cold-brew.png'), href: `${WP_URL}/cold-brew-brewing-guide/` },
+];
+
 export interface Collection { path: string; title: string; blurb: string; categorySlug: string }
 export const collections: Collection[] = [
   { path: 'coffee-beans-retail', title: 'Retail Coffee Beans', blurb: 'Freshly roasted beans for your home brew.', categorySlug: 'retail' },

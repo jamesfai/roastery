@@ -1,25 +1,34 @@
 ---
-import { fromPrice, type WCProduct } from '../lib/wp';
-interface Props { product: WCProduct }
-const { product: p } = Astro.props;
+import { fromPrice, wcUrl, type WCProduct } from '../lib/wp';
+interface Props { product: WCProduct; dark?: boolean }
+const { product: p, dark = false } = Astro.props;
 const img = p.images[0];
+const simple = p.type === 'simple' && p.is_purchasable;
+const tag = p.categories.find((c) => !['retail', 'wholesale'].includes(c.slug))?.name ?? p.categories[0]?.name;
 ---
-<a class="card" href={`/products/${p.slug}/`}>
-  <div class="media"><img src={img.src} alt={img.alt || p.name} loading="lazy" width="600" height="600" /></div>
+<article class:list={['card', { dark }]}>
+  <a class="media" href={`/products/${p.slug}/`} aria-label={p.name} tabindex="-1">
+    <span class="tag">{tag}</span>
+    <img src={img.src} alt={img.alt || p.name} loading="lazy" width="600" height="600" />
+  </a>
   <div class="body">
-    <span class="cat">{p.categories.find((c) => c.slug !== 'retail' && c.slug !== 'wholesale')?.name ?? p.categories[0]?.name}</span>
-    <h3>{p.name}</h3>
-    <span class="price">{fromPrice(p)}</span>
+    <h3><a href={`/products/${p.slug}/`}>{p.name}</a></h3>
+    <p class="price">{fromPrice(p)}</p>
+    {p.is_in_stock
+      ? <a class="btn sm" href={simple ? wcUrl.addToCart(p.id) : `/products/${p.slug}/`}>{simple ? 'Add to cart' : 'Choose options'}</a>
+      : <span class="out">Out of stock</span>}
   </div>
-</a>
+</article>
 <style>
-  .card { display: block; text-decoration: none; background: #fff; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; transition: transform .25s, box-shadow .25s; }
-  .card:hover { transform: translateY(-4px); box-shadow: 0 16px 36px rgba(36,22,15,.12); }
-  .media { aspect-ratio: 1; background: var(--cream); overflow: hidden; }
-  .media img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s; }
-  .card:hover img { transform: scale(1.05); }
-  .body { padding: 16px 18px 20px; }
-  .cat { font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; color: var(--caramel-dark); font-weight: 600; }
-  h3 { margin: .25em 0 .35em; font-size: 1.15rem; }
-  .price { color: var(--muted); font-weight: 500; }
+  .card { display: flex; flex-direction: column; }
+  .media { position: relative; display: block; aspect-ratio: 1; background: var(--mist); overflow: hidden; }
+  .media .tag { position: absolute; top: 14px; left: 14px; z-index: 1; }
+  .media img { width: 100%; height: 100%; object-fit: cover; mix-blend-mode: multiply; transition: transform .4s; }
+  .card:hover .media img { transform: scale(1.04); }
+  .body { padding: 18px var(--pad, 20px) 28px; display: flex; flex-direction: column; gap: 4px; flex: 1; align-items: flex-start; }
+  h3 { margin: 0; } h3 a { text-decoration: none; } h3 a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .price { margin: 0 0 14px; color: var(--muted); } .dark .price { color: var(--muted-on-ink); }
+  .body .btn { margin-top: auto; }
+  .out { font-weight: 600; color: var(--muted); }
+  @media (prefers-reduced-motion: reduce) { .media img { transition: none; } }
 </style>

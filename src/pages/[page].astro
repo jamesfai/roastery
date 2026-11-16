@@ -18,10 +18,9 @@ const html = page.content.rendered
   .replace(/<style[\s\S]*?<\/style>/gi, '');
 ---
 <Base title={plain(page.title.rendered)} description={plain(html).slice(0, 160)}>
-  <section class="head"><div class="wrap"><h1 set:html={page.title.rendered} /></div></section>
-  <section class="section"><div class="wrap"><article class="prose" set:html={html} /></div></section>
+  <header class="page-head"><div class="frame"><h1 set:html={page.title.rendered} /></div></header>
+  <section class="band"><div class="frame pad"><article class="prose" set:html={html} /></div></section>
 </Base>
 <style>
-  .head { background: var(--cream); padding: 56px 0 36px; border-bottom: 1px solid var(--line); }
-  .head h1 { font-size: clamp(2rem, 4vw, 3rem); margin: 0; }
+  .band { padding: clamp(40px, 6vw, 80px) 0; }
 </style>
