@@ -1,0 +1,55 @@
+---
+import { WP_URL } from '../lib/wp';
+const logo = `${WP_URL}/wp-content/uploads/2024/09/daily-grind-roastery-logo.webp`;
+const year = new Date().getFullYear();
+---
+<footer>
+  <div class="wrap cols">
+    <div>
+      <img src={logo} alt="Daily Grind Roastery" height="52" class="flogo" />
+      <p>Expertly roasted coffee beans for every brew.</p>
+      <p class="social"><a href="https://facebook.com/DailyGrindRoastery/" rel="noopener">Facebook</a> · <a href="https://instagram.com/dailygrindroastery/" rel="noopener">Instagram</a></p>
+    </div>
+    <div>
+      <h3>Shop</h3>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/coffee-beans-retail/">Coffee Beans Retail</a></li>
+        <li><a href="/wholesale-coffee-beans/">Coffee Beans Wholesale</a></li>
+        <li><a href="/coffee-beans-retail/drip-coffee/">Drip Coffee</a></li>
+        <li><a href="/brewing-guides/">Brewing Guides</a></li>
+        <li><a href="/about-us/">About Us</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3>Quicklinks</h3>
+      <ul>
+        <li><a href={`${WP_URL}/blogs/`}>The Roast Journal</a></li>
+        <li><a href="/faqs/">FAQs</a></li>
+        <li><a href="/contact-us/">Contact Us</a></li>
+        <li><a href="/shipping-policy/">Shipping Policy</a></li>
+        <li><a href="/privacy-policy/">Privacy Policy</a></li>
+        <li><a href="/terms-and-conditions/">Terms and Conditions</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3>Visit &amp; contact</h3>
+      <address>GF FilWeb Asia Bldg., Maharlika Drive, USPS, San Pedro City, Laguna, Philippines</address>
+      <p>0917-1663693<br />02-8869-4428<br />Mon–Sat, 8:00 am – 5:00 pm</p>
+    </div>
+  </div>
+  <div class="wrap legal">© {year} Daily Grind Roastery. All rights reserved.</div>
+</footer>
+<style>
+  footer { background: var(--espresso); color: #e9dccb; padding: 64px 0 24px; margin-top: 0; }
+  .cols { display: grid; gap: 32px; grid-template-columns: 1.3fr 1fr 1fr 1.2fr; }
+  footer h3 { color: #fff; font-size: 1rem; }
+  ul { list-style: none; padding: 0; margin: 0; }
+  li { margin: .35em 0; }
+  a { text-decoration: none; opacity: .85; } a:hover { opacity: 1; color: #e8b27d; }
+  address { font-style: normal; margin-bottom: .6em; }
+  .flogo { height: 52px; width: auto; filter: brightness(0) invert(1); margin-bottom: 12px; }
+  .legal { margin-top: 40px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,.12); font-size: .85rem; opacity: .7; }
+  @media (max-width: 800px) { .cols { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 520px) { .cols { grid-template-columns: 1fr; } }
+</style>

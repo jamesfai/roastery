@@ -1,0 +1,39 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="Contact Us" description="Get in touch with Daily Grind Roastery for retail and wholesale coffee enquiries.">
+  <section class="head"><div class="wrap"><h1>Contact Us</h1><p>Questions about an order, wholesale supply or custom blends? We'd love to hear from you.</p></div></section>
+  <section class="section">
+    <div class="wrap cols">
+      <div class="card">
+        <h3>Roastery</h3>
+        <address>GF FilWeb Asia Bldg., Maharlika Drive, USPS,<br />San Pedro City, Laguna, Philippines</address>
+        <h3>Call</h3>
+        <p>0917-1663693<br />02-8869-4428</p>
+        <h3>Hours</h3>
+        <p>Monday to Saturday, 8:00 am – 5:00 pm</p>
+        <p><a href="https://facebook.com/DailyGrindRoastery/" rel="noopener">Facebook</a> · <a href="https://instagram.com/dailygrindroastery/" rel="noopener">Instagram</a></p>
+      </div>
+      <div class="card">
+        <h3>Send a message</h3>
+        <p class="muted">The contact form is a placeholder while the site is built locally. It will be connected to the WordPress form handler (Contact Form 7 / WPForms REST endpoint) before launch.</p>
+        <form onsubmit="return false">
+          <label>Name<input name="name" required /></label>
+          <label>Email<input type="email" name="email" required /></label>
+          <label>Message<textarea name="message" rows="5" required></textarea></label>
+          <button class="btn" disabled>Send message</button>
+        </form>
+      </div>
+    </div>
+  </section>
+</Base>
+<style>
+  .head { background: var(--cream); padding: 56px 0 36px; border-bottom: 1px solid var(--line); } .head h1 { font-size: clamp(2rem,4vw,3rem); } .head p { color: var(--muted); margin: 0; }
+  .cols { display: grid; grid-template-columns: 1fr 1.4fr; gap: 28px; }
+  .card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 28px; }
+  address { font-style: normal; } .muted { color: var(--muted); font-size: .9rem; }
+  label { display: block; font-weight: 500; margin-bottom: 14px; }
+  input, textarea { display: block; width: 100%; margin-top: 6px; padding: 12px; border: 1.5px solid var(--line); border-radius: 10px; font: inherit; background: var(--paper); }
+  button[disabled] { opacity: .5; cursor: not-allowed; }
+  @media (max-width: 800px) { .cols { grid-template-columns: 1fr; } }
+</style>

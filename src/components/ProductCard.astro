@@ -1,0 +1,25 @@
+---
+import { fromPrice, type WCProduct } from '../lib/wp';
+interface Props { product: WCProduct }
+const { product: p } = Astro.props;
+const img = p.images[0];
+---
+<a class="card" href={`/products/${p.slug}/`}>
+  <div class="media"><img src={img.src} alt={img.alt || p.name} loading="lazy" width="600" height="600" /></div>
+  <div class="body">
+    <span class="cat">{p.categories.find((c) => c.slug !== 'retail' && c.slug !== 'wholesale')?.name ?? p.categories[0]?.name}</span>
+    <h3>{p.name}</h3>
+    <span class="price">{fromPrice(p)}</span>
+  </div>
+</a>
+<style>
+  .card { display: block; text-decoration: none; background: #fff; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; transition: transform .25s, box-shadow .25s; }
+  .card:hover { transform: translateY(-4px); box-shadow: 0 16px 36px rgba(36,22,15,.12); }
+  .media { aspect-ratio: 1; background: var(--cream); overflow: hidden; }
+  .media img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s; }
+  .card:hover img { transform: scale(1.05); }
+  .body { padding: 16px 18px 20px; }
+  .cat { font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; color: var(--caramel-dark); font-weight: 600; }
+  h3 { margin: .25em 0 .35em; font-size: 1.15rem; }
+  .price { color: var(--muted); font-weight: 500; }
+</style>

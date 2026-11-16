@@ -1,0 +1,38 @@
+---
+import Base from '../layouts/Base.astro';
+import ProductCard from '../components/ProductCard.astro';
+import { collections, productsIn } from '../lib/wp';
+
+export async function getStaticPaths() {
+  return Promise.all(
+    collections.map(async (c) => ({ params: { collection: c.path }, props: { c, products: await productsIn(c.categorySlug) } })),
+  );
+}
+const { c, products } = Astro.props;
+const subs = collections.filter((x) => x.path.startsWith(c.path.split('/')[0]) && x.path !== c.path && (c.path.includes('/') ? false : true));
+const crumbs = c.path.includes('/') ? collections.find((x) => x.path === c.path.split('/')[0]) : undefined;
+---
+<Base title={c.title} description={c.blurb}>
+  <section class="head">
+    <div class="wrap">
+      {crumbs && <p class="eyebrow"><a href={`/${crumbs.path}/`}>{crumbs.title}</a> /</p>}
+      <h1>{c.title}</h1>
+      <p>{c.blurb}</p>
+      {subs.length > 0 && <p class="subs">{subs.map((s) => <a class="chip" href={`/${s.path}/`}>{s.title}</a>)}</p>}
+    </div>
+  </section>
+  <section class="section">
+    <div class="wrap">
+      <p class="count">{products.length} products</p>
+      <div class="grid">{products.map((p) => <ProductCard product={p} />)}</div>
+    </div>
+  </section>
+</Base>
+<style>
+  .head { background: var(--cream); padding: 56px 0 40px; border-bottom: 1px solid var(--line); }
+  .head h1 { font-size: clamp(2rem, 4vw, 3rem); } .head p { color: var(--muted); max-width: 60ch; }
+  .eyebrow a { text-decoration: none; }
+  .chip { display: inline-block; margin: 6px 8px 0 0; padding: 6px 16px; border: 1.5px solid var(--line); border-radius: 999px; text-decoration: none; color: var(--espresso); background: #fff; font-weight: 500; }
+  .chip:hover { border-color: var(--caramel); color: var(--caramel-dark); }
+  .count { color: var(--muted); margin: 0 0 20px; }
+</style>

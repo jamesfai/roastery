@@ -1,0 +1,54 @@
+---
+import Base from '../../layouts/Base.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import { getProducts, priceLabel, plain, wcUrl, collections } from '../../lib/wp';
+
+export async function getStaticPaths() {
+  const all = await getProducts();
+  return all.map((p) => ({ params: { slug: p.slug }, props: { p, related: all.filter((r) => r.id !== p.id && r.categories.some((c) => p.categories.some((pc) => pc.id === c.id && c.slug !== 'retail' && c.slug !== 'wholesale'))).slice(0, 4) } }));
+}
+const { p, related } = Astro.props;
+const simple = p.type === 'simple' && p.is_purchasable;
+const crumbCat = p.categories.map((c) => collections.find((x) => x.categorySlug === c.slug)).filter(Boolean).sort((a, b) => b!.path.length - a!.path.length)[0];
+---
+<Base title={p.name} description={plain(p.short_description).slice(0, 160)} image={p.images[0]?.src}>
+  <div class="wrap detail">
+    <div class="gallery">
+      <img class="main" src={p.images[0].src} alt={p.images[0].alt || p.name} />
+      {p.images.length > 1 && <div class="thumbs">{p.images.slice(1).map((i) => <img src={i.thumbnail} alt={i.alt || p.name} loading="lazy" />)}</div>}
+    </div>
+    <div class="info">
+      {crumbCat && <p class="eyebrow"><a href={`/${crumbCat.path}/`}>{crumbCat.title}</a></p>}
+      <h1>{p.name}</h1>
+      <p class="price">{priceLabel(p)}</p>
+      <div class="short" set:html={p.short_description} />
+      {p.attributes.length > 0 && (
+        <dl>{p.attributes.map((a) => <><dt>{a.name}</dt><dd>{a.terms.map((t) => t.name).join(', ')}</dd></>)}</dl>
+      )}
+      {!p.is_in_stock ? <p class="out">Currently out of stock</p> : simple
+        ? <a class="btn" href={wcUrl.addToCart(p.id)}>Add to Cart</a>
+        : <a class="btn" href={p.permalink}>Choose Size &amp; Grind</a>}
+      <p class="note">{simple ? 'Adds to your cart and continues at our secure WooCommerce checkout.' : 'Select your size and grind on our secure WooCommerce store.'}</p>
+    </div>
+  </div>
+  {p.description && (
+    <section class="section alt"><div class="wrap"><div class="prose" set:html={p.description} /></div></section>
+  )}
+  {related.length > 0 && (
+    <section class="section"><div class="wrap">
+      <h2>You may also like</h2>
+      <div class="grid">{related.map((r) => <ProductCard product={r} />)}</div>
+    </div></section>
+  )}
+</Base>
+<style>
+  .detail { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; padding-top: 48px; padding-bottom: 56px; align-items: start; }
+  .main { width: 100%; border-radius: var(--radius); background: var(--cream); border: 1px solid var(--line); }
+  .thumbs { display: flex; gap: 10px; margin-top: 10px; } .thumbs img { width: 80px; border-radius: 8px; border: 1px solid var(--line); }
+  .eyebrow a { text-decoration: none; }
+  .price { font-size: 1.5rem; font-family: var(--serif); color: var(--caramel-dark); margin: 0 0 1rem; }
+  .short { color: var(--muted); }
+  dl { display: grid; grid-template-columns: max-content 1fr; gap: 6px 18px; margin: 20px 0; } dt { font-weight: 600; } dd { margin: 0; }
+  .note { font-size: .85rem; color: var(--muted); } .out { color: #a33; font-weight: 600; }
+  @media (max-width: 800px) { .detail { grid-template-columns: 1fr; gap: 28px; } }
+</style>

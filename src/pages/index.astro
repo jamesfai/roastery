@@ -1,0 +1,93 @@
+---
+import Base from '../layouts/Base.astro';
+import ProductCard from '../components/ProductCard.astro';
+import { getProducts } from '../lib/wp';
+
+const all = await getProducts();
+const featuredSlugs = ['nicaragua-shg', 'sumatra-mandheling', 'ethiopia-yirgacheffe', 'guatemala'];
+const featured = featuredSlugs.map((s) => all.find((p) => p.slug === s)).filter((p) => !!p);
+const tiles = [
+  { t: 'Shop Now', href: '/coffee-beans-retail/', img: all.find((p) => p.slug === 'caramelo')?.images[0]?.src },
+  { t: 'Single Origin', href: '/coffee-beans-retail/single-origin/', img: all.find((p) => p.slug === 'colombia-supremo')?.images[0]?.src },
+  { t: 'House Blend', href: '/coffee-beans-retail/house-blend/', img: all.find((p) => p.slug === 'bliss')?.images[0]?.src },
+];
+const features = [
+  ['01', 'Small-batch Roasting', 'Every batch is roasted to order so your beans arrive at peak freshness.'],
+  ['02', 'Specialty Coffee Supply', 'Reliable bulk supply for cafés, retailers and businesses nationwide.'],
+  ['03', 'Custom Coffee Branding', 'Custom blends, packaging and labeling to make the coffee yours.'],
+];
+---
+<Base title="Freshly Roasted Coffee Beans | Daily Grind Roastery">
+  <section class="hero">
+    <div class="wrap">
+      <p class="eyebrow">Small-batch · Laguna, Philippines</p>
+      <h1>Expertly roasted coffee beans for every brew.</h1>
+      <p class="lead">Whether you're brewing at home or running a café, our freshly roasted beans are crafted to bring out the best in every cup.</p>
+      <div class="cta"><a class="btn" href="/coffee-beans-retail/">Explore Our Coffee</a> <a class="btn ghost" href="/wholesale-coffee-beans/">Wholesale</a></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <div><p class="eyebrow">Fan favorites</p><h2>Our Best-Selling Roasts</h2></div>
+        <a class="btn ghost dark" href="/coffee-beans-retail/">Shop All Roasts</a>
+      </div>
+      <div class="grid">{featured.map((p) => <ProductCard product={p!} />)}</div>
+    </div>
+  </section>
+
+  <section class="section alt">
+    <div class="wrap tiles">
+      {tiles.map((t) => (
+        <a href={t.href} class="tile" style={t.img ? `background-image:linear-gradient(180deg,rgba(36,22,15,.1),rgba(36,22,15,.75)),url(${t.img})` : ''}>
+          <span>{t.t}</span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap split">
+      <div>
+        <p class="eyebrow">For businesses</p>
+        <h2>Your Trusted Partner for Premium Coffee Solutions</h2>
+        <p>Built for café owners, retailers and corporate clients who care about what's in the cup. From artisanal roasting to custom branding, we make great coffee easy to run with.</p>
+        <a class="btn" href="/wholesale-coffee-beans/">Order Now</a>
+      </div>
+      <ol class="features">
+        {features.map(([n, t, d]) => <li><span class="n">{n}</span><div><h3>{t}</h3><p>{d}</p></div></li>)}
+      </ol>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap">
+      <h2>Delivering satisfaction to coffee lovers, from retail shoppers to wholesale buyers.</h2>
+      <p>Join us for some brew-tiful moments!</p>
+      <a class="btn" href="/coffee-beans-retail/">Discover Now</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero { background: radial-gradient(1200px 500px at 85% -10%, #5a3a26 0%, transparent 60%), var(--espresso); color: #fff; padding: clamp(72px, 12vw, 150px) 0; }
+  .hero .eyebrow { color: #e8b27d; }
+  .hero h1 { max-width: 15ch; }
+  .lead { font-size: 1.15rem; max-width: 52ch; color: #e9dccb; }
+  .cta { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 28px; }
+  .cta .ghost { color: #fff; }
+  .btn.ghost.dark { color: var(--espresso); } .btn.ghost.dark:hover { background: var(--espresso); color: #fff; }
+  .tiles { display: grid; gap: 20px; grid-template-columns: repeat(3, 1fr); }
+  .tile { aspect-ratio: 4/5; background-size: cover; background-position: center; border-radius: var(--radius); color: #fff; text-decoration: none; display: flex; align-items: end; padding: 24px; font-family: var(--serif); font-size: 1.6rem; text-transform: none; transition: transform .25s; background-color: var(--roast); }
+  .tile:hover { transform: translateY(-4px); }
+  .split { display: grid; gap: 56px; grid-template-columns: 1fr 1fr; align-items: center; }
+  .features { list-style: none; padding: 0; margin: 0; display: grid; gap: 20px; }
+  .features li { display: flex; gap: 18px; background: var(--cream); padding: 22px; border-radius: var(--radius); }
+  .features .n { font-family: var(--serif); font-size: 2rem; color: var(--caramel); line-height: 1; }
+  .features h3 { margin-bottom: .2em; } .features p { margin: 0; color: var(--muted); }
+  .band { background: var(--caramel); color: #fff; text-align: center; padding: 72px 0; }
+  .band h2 { max-width: 24ch; margin-inline: auto; }
+  .band .btn { background: var(--espresso); } .band .btn:hover { background: #000; }
+  @media (max-width: 800px) { .tiles { grid-template-columns: 1fr; } .tile { aspect-ratio: 16/9; } .split { grid-template-columns: 1fr; } }
+</style>
