@@ -23,17 +23,16 @@ const subs = parent ? [] : collections.filter((x) => x.path.startsWith(`${top}/`
     </div>
   </header>
   <section class="band">
-    <div class="frame lines">
+    <div class="frame">
       <p class="count pad">{products.length} {products.length === 1 ? 'product' : 'products'}</p>
       <div class="grid4">{products.map((p) => <ProductCard product={p} />)}</div>
     </div>
   </section>
 </Base>
 <style>
-  .band { padding: 0 0 clamp(48px, 7vw, 88px); }
-  .count { margin: 0; padding-top: 28px; padding-bottom: 20px; color: var(--muted); }
+  .band { padding-top: 32px; }
+  .count { margin: 0 0 20px; color: var(--muted); }
   .chips { list-style: none; display: flex; flex-wrap: wrap; gap: 10px; margin: 28px 0 0; padding: 0; }
-  .chips a { display: inline-block; padding: 8px 18px; border: 1.5px solid var(--ink); text-decoration: none; font-weight: 500; min-height: 44px; line-height: 28px; }
-  .chips a:hover { background: var(--yellow); }
-  .grid4 :global(.card) { height: 100%; }
+  .chips a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; border: 2px solid var(--white); border-radius: 999px; text-decoration: none; font-weight: 600; }
+  .chips a:hover { background: var(--yellow); border-color: var(--yellow); color: var(--ink); }
 </style>

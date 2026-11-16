@@ -1,0 +1,31 @@
+---
+// Renders only when PUBLIC_NEWSLETTER_URL is set, so the site never shows a signup form that goes nowhere.
+interface Props { variant?: 'footer' | 'panel' }
+const { variant = 'panel' } = Astro.props;
+const action = import.meta.env.PUBLIC_NEWSLETTER_URL as string | undefined;
+---
+{action && (
+  <div class:list={['nl', variant]}>
+    <form action={action} method="post" class="frame pad">
+      <div>
+        <h3 class="title">Join the Roast Journal</h3>
+        <p class="muted">New roasts, brewing tips and stories from the roastery.</p>
+      </div>
+      <div class="field">
+        <label for={`nl-${variant}`} class="sr">Email address</label>
+        <input id={`nl-${variant}`} type="email" name="email" autocomplete="email" placeholder="Enter your email" required />
+        <button class="btn" type="submit">Subscribe</button>
+      </div>
+    </form>
+  </div>
+)}
+<style>
+  .nl { border-top: 1px solid var(--ln-on-ink); margin-top: 40px; }
+  form { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: center; padding-top: 32px; padding-bottom: 8px; }
+  .title { color: var(--white); font-size: 1.2rem; letter-spacing: -0.01em; text-transform: none; margin-bottom: .2em; }
+  form p { margin: 0; }
+  .field { display: flex; gap: 10px; }
+  input { flex: 1; min-width: 0; min-height: 48px; padding: 0 14px; border: 1.5px solid var(--ln-on-ink); border-radius: 6px; background: transparent; color: var(--white); font: inherit; }
+  input::placeholder { color: var(--muted-on-ink); }
+  @media (max-width: 720px) { form { grid-template-columns: 1fr; } }
+</style>

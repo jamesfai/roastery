@@ -1,149 +1,215 @@
 ---
 import Base from '../layouts/Base.astro';
 import ProductCard from '../components/ProductCard.astro';
-import { getProducts, photos, guides, productsIn } from '../lib/wp';
+import BlogCard from '../components/BlogCard.astro';
+import { getProducts, getPosts, photos, guides, type BlogPost } from '../lib/wp';
 
 const all = await getProducts();
-const featured = ['nicaragua-shg', 'sumatra-mandheling', 'ethiopia-yirgacheffe', 'guatemala']
-  .map((s) => all.find((p) => p.slug === s)).filter((p) => !!p);
-const wholesale = (await productsIn('single-origin-wholesale')).slice(0, 4);
+const pick = (slugs: string[]) => slugs.map((s) => all.find((p) => p.slug === s)).filter((p) => !!p);
+const heroBags = pick(['nicaragua-shg', 'ethiopia-yirgacheffe', 'caramelo']);
+const featured = pick(['nicaragua-shg', 'sumatra-mandheling', 'ethiopia-yirgacheffe', 'guatemala']);
+let posts: BlogPost[] = [];
+try { posts = (await getPosts()).slice(0, 3); } catch (e) { console.warn('[home] blog posts unavailable', (e as Error).message); }
 
-const mosaic = [
-  { src: photos.beans, alt: 'Roasted coffee beans', h: 200 },
-  { src: photos.drip, alt: 'Hot water poured over ground coffee', h: 280 },
-  { src: photos.barista, alt: 'Barista filling a portafilter with ground coffee', h: 400 },
-  { src: photos.brewing, alt: 'Coffee brewing into a cup', h: 240 },
-  { src: photos.steam, alt: 'Steam rising from freshly roasted coffee', h: 320 },
+const icon = {
+  flame: 'M12 3c1 4 5 6 5 11a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-4-2-5 1-10z',
+  truck: 'M2 6h11v10H2zM13 10h4l3 3v3h-7zM6 19a1.5 1.5 0 1 0 0-.01M17 19a1.5 1.5 0 1 0 0-.01',
+  lock: 'M6 11h12v9H6zM8 11V8a4 4 0 0 1 8 0v3',
+  bean: 'M12 3c4 0 7 4 7 9s-3 9-7 9-7-4-7-9 3-9 7-9zM9 19c4-3 5-8 6-14',
+  box: 'M3 8l9-5 9 5v8l-9 5-9-5zM3 8l9 5 9-5M12 13v8',
+  heart: 'M12 20s-8-5-8-11a4.5 4.5 0 0 1 8-2.5A4.5 4.5 0 0 1 20 9c0 6-8 11-8 11z',
+};
+const perks = [
+  { i: 'flame', t: 'Small-batch roasted', d: 'Roasted to order for peak freshness.' },
+  { i: 'bean', t: 'Specialty grade beans', d: 'Single origins and house blends.' },
+  { i: 'box', t: 'Retail and wholesale', d: 'From one bag to café volumes.' },
 ];
-const paths = [
-  { t: 'Single Origin', d: 'One farm region per bag. Taste where it grew.', href: '/coffee-beans-retail/single-origin/', icon: 'bean' },
-  { t: 'House Blend', d: 'Balanced blends made for everyday cups.', href: '/coffee-beans-retail/house-blend/', icon: 'cup' },
-  { t: 'Drip Coffee', d: 'Single-serve drip bags. Add hot water.', href: '/coffee-beans-retail/drip-coffee/', icon: 'drip' },
-  { t: 'Brewing Guides', d: 'Step-by-step methods, from espresso to cold brew.', href: '/brewing-guides/', icon: 'kettle' },
+const trust = [
+  { i: 'flame', t: 'Freshly roasted', d: 'Roasted in small batches' },
+  { i: 'lock', t: 'Secure checkout', d: 'Protected WooCommerce payments' },
+  { i: 'truck', t: 'Ships from Laguna', d: 'Delivery across the Philippines' },
+  { i: 'heart', t: 'Made for every brew', d: 'Choose your grind at checkout' },
+];
+const business = [
+  ['Small-batch roasting', 'Every batch is roasted with care so your café serves the same great cup each day.'],
+  ['Specialty coffee supply', 'Reliable bulk supply for cafés, retailers and corporate clients nationwide.'],
+  ['Custom coffee branding', 'Custom blends, packaging and labeling to make the coffee your own.'],
 ];
 ---
 <Base title="Freshly Roasted Coffee Beans | Daily Grind Roastery">
   <!-- Hero -->
-  <section class="hero">
-    <div class="frame lines">
-      <div class="hero-top pad">
-        <h1>Expertly roasted coffee beans for every brew.</h1>
-        <div class="hero-side">
-          <p>Whether you're brewing at home or running a café, our freshly roasted beans bring out the best in every cup.</p>
-          <a class="btn" href="/coffee-beans-retail/">Explore our coffee</a>
+  <section class="hero ink" style={`--hero:url("${photos.roaster}")`}>
+    <div class="frame pad hero-grid">
+      <div class="hero-copy">
+        <h1>Expertly roasted.<br />Ready for every <span class="hl">brew.</span></h1>
+        <p class="sub">Premium, small-batch roasted coffee for home brewers and café owners. Freshly roasted in Laguna, Philippines.</p>
+        <div class="btn-row">
+          <a class="btn" href="/coffee-beans-retail/">Shop coffee</a>
+          <a class="btn outline" href="/about-us/">Our story</a>
         </div>
+        <ul class="perks">
+          {perks.map((p) => (
+            <li>
+              <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="var(--yellow)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={icon[p.i as keyof typeof icon]} /></svg>
+              <span><strong>{p.t}</strong><small>{p.d}</small></span>
+            </li>
+          ))}
+        </ul>
       </div>
-      <div class="mosaic" aria-hidden="false">
-        {mosaic.map((m) => <img src={m.src} alt={m.alt} style={`height:${m.h}px`} width="400" height={m.h} loading={m.h > 300 ? 'eager' : 'lazy'} />)}
-      </div>
-    </div>
-  </section>
-
-  <!-- Where to start + wholesale supply -->
-  <section class="band ink">
-    <div class="frame lines on-ink">
-      <h2 class="pad lead-h">What would you like to brew today?</h2>
-      <div class="grid4 paths">
-        {paths.map((p) => (
-          <a class="path" href={p.href}>
-            <svg viewBox="0 0 48 48" width="44" height="44" fill="none" stroke="#faee8a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              {p.icon === 'bean' && <><ellipse cx="24" cy="24" rx="12" ry="17" transform="rotate(35 24 24)" /><path d="M16 36c9-6 11-14 16-24" /></>}
-              {p.icon === 'cup' && <><path d="M8 18h26v10a10 10 0 0 1-10 10h-6A10 10 0 0 1 8 28z" /><path d="M34 21h4a4 4 0 0 1 0 8h-5" /><path d="M16 8v4M24 8v4" /></>}
-              {p.icon === 'drip' && <><path d="M10 12h28l-6 14H16z" /><path d="M24 30v2" /><path d="M14 40h20" /><path d="M18 36h12" /></>}
-              {p.icon === 'kettle' && <><path d="M12 20h22l2 18H10z" /><path d="M18 20c0-6 4-8 6-8s6 2 6 8" /><path d="M36 24c5 0 6 8 0 8" /></>}
-            </svg>
-            <h3>{p.t}</h3>
-            <p class="muted">{p.d}</p>
-            <span class="more">See all</span>
+      <div class="bags" aria-label="Best-selling roasts">
+        {heroBags.map((b) => (
+          <a href={`/products/${b!.slug}/`} class="bag">
+            <img src={b!.images[0].src} alt={b!.name} width="400" height="400" loading="eager" />
+            <span>{b!.name}</span>
           </a>
         ))}
       </div>
-
-      <div class="supply-head pad">
-        <h2>Supply for cafés and retailers</h2>
-        <a class="btn outline" href="/wholesale-coffee-beans/">Shop wholesale</a>
-      </div>
-      <div class="grid4 cards">{wholesale.map((p) => <ProductCard product={p} dark />)}</div>
     </div>
   </section>
 
-  <!-- Learn to brew -->
-  <section class="band learn">
-    <div class="frame lines">
-      <div class="learn-grid">
-        <div class="learn-text">
-          <h2>Learn to brew a better cup</h2>
-          <a class="btn outline" href="/brewing-guides/">All brewing guides</a>
-          <ul class="guides">
-            {guides.map((g) => (
-              <li>
-                <a href={g.href}>
-                  <img src={g.img} alt="" width="96" height="68" loading="lazy" />
-                  <span><strong>{g.title}</strong><small class="muted">{g.blurb}</small></span>
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div class="learn-photos">
-          <img src={photos.grinder} alt="Close-up of a vintage wooden coffee grinder" loading="lazy" width="400" height="300" />
-          <img src={photos.roasterOn} alt="Turning on the coffee roaster" loading="lazy" width="400" height="300" />
-          <img src={photos.drinking} alt="Enjoying a cup of coffee" loading="lazy" width="400" height="300" />
-        </div>
+  <!-- Trust strip -->
+  <section class="band white tight">
+    <ul class="frame pad trust">
+      {trust.map((t) => (
+        <li>
+          <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="var(--ink)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={icon[t.i as keyof typeof icon]} /></svg>
+          <span><strong>{t.t}</strong><small class="muted">{t.d}</small></span>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <!-- For businesses -->
+  <section class="band ink biz">
+    <div class="frame pad biz-grid">
+      <div>
+        <span class="kicker hl">For cafés and retailers</span>
+        <h2>Your trusted partner for premium coffee</h2>
+        <ul class="biz-list">
+          {business.map(([t, d]) => <li><h3>{t}</h3><p class="muted">{d}</p></li>)}
+        </ul>
+        <a class="btn" href="/wholesale-coffee-beans/">Shop wholesale</a>
+      </div>
+      <img src={photos.drinking} alt="A cup of freshly brewed coffee" width="640" height="480" loading="lazy" />
+    </div>
+  </section>
+
+  <!-- Story -->
+  <section class="band">
+    <div class="frame pad story">
+      <img src={photos.roasterOn} alt="Turning on the coffee roaster at Daily Grind Roastery" width="640" height="440" loading="lazy" />
+      <div>
+        <span class="kicker">Our story</span>
+        <h2>Great coffee. <span class="hl">Roasted with care.</span></h2>
+        <p>Daily Grind Roastery brings expertise, dedication and a love for coffee to every roast. We craft exceptional single origins and signature blends, then deliver them to your cup or your café.</p>
+        <a class="btn" href="/about-us/">Learn more</a>
       </div>
     </div>
   </section>
 
-  <!-- Best sellers -->
-  <section class="band ink">
-    <div class="frame lines on-ink">
-      <div class="supply-head pad">
-        <h2>Our best-selling roasts</h2>
-        <a class="btn outline" href="/coffee-beans-retail/">Shop all roasts</a>
+  <!-- Our coffees -->
+  <section class="band tight-top">
+    <div class="frame">
+      <h2 class="center">Our coffees</h2>
+      <p class="center muted lead">Best-selling roasts, ground to your brew method at checkout.</p>
+      <div class="grid4">{featured.map((p) => <ProductCard product={p!} />)}</div>
+      <p class="center cta-row"><a class="btn outline" href="/coffee-beans-retail/">View all coffees</a></p>
+    </div>
+  </section>
+
+  <!-- Brewing guides -->
+  <section class="band white">
+    <div class="frame pad">
+      <div class="section-head">
+        <div><span class="kicker">Brewing guides</span><h2>Learn to brew a better cup</h2></div>
+        <a class="btn outline" href="/brewing-guides/">All guides</a>
       </div>
-      <div class="grid4 cards">{featured.map((p) => <ProductCard product={p!} dark />)}</div>
+      <ul class="guides">
+        {guides.map((g) => (
+          <li>
+            <a href={g.href}>
+              <img src={g.img} alt="" width="320" height="230" loading="lazy" />
+              <h3>{g.title}</h3>
+              <p class="muted">{g.blurb}</p>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- Journal -->
+  {posts.length > 0 && (
+    <section class="band">
+      <div class="frame">
+        <div class="section-head pad">
+          <div><span class="kicker">The Roast Journal</span><h2>Stories from the roastery</h2></div>
+          <a class="btn outline" href="/blogs/">All articles</a>
+        </div>
+        <div class="grid3">{posts.map((p) => <BlogCard post={p} />)}</div>
+      </div>
+    </section>
+  )}
+
+  <!-- Closing CTA -->
+  <section class="band tight-top">
+    <div class="frame pad">
+      <div class="cta ink" style={`--cta:url("${photos.beans}")`}>
+        <div>
+          <h2>Running a café? <span class="hl">Let's talk wholesale.</span></h2>
+          <p class="muted">Bulk single origins and house blends, with custom branding available.</p>
+          <div class="btn-row"><a class="btn" href="/wholesale-coffee-beans/">Browse wholesale</a><a class="btn outline" href="/contact-us/">Contact us</a></div>
+        </div>
+      </div>
     </div>
   </section>
 </Base>
 
 <style>
-  .hero { padding-top: clamp(40px, 6vw, 72px); overflow: hidden; }
-  .hero-top { display: grid; grid-template-columns: 3fr 1.4fr; gap: clamp(24px, 5vw, 72px); align-items: start; padding-bottom: clamp(36px, 5vw, 64px); }
-  .hero-top h1 { margin: 0; max-width: 11ch; }
-  .hero-side { padding-top: .6rem; max-width: 36ch; }
-  .hero-side .btn { margin-top: .5rem; }
-  .mosaic { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; align-items: end; padding: 0; }
-  .mosaic img { width: 100%; object-fit: cover; }
+  .hero { background: linear-gradient(90deg, var(--ink) 30%, rgba(33,33,33,.78) 70%, rgba(33,33,33,.6)), var(--hero) center / cover; padding: clamp(48px, 8vw, 104px) 0; }
+  .hero-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(24px, 5vw, 64px); align-items: center; }
+  .hero h1 { margin-bottom: .35em; }
+  .sub { font-size: 1.15rem; max-width: 44ch; color: var(--muted-on-ink); margin-bottom: 1.6em; }
+  .perks { list-style: none; padding: 0; margin: 40px 0 0; display: flex; gap: 28px; flex-wrap: wrap; }
+  .perks li { display: flex; gap: 12px; align-items: center; max-width: 200px; }
+  .perks span, .trust span { display: flex; flex-direction: column; line-height: 1.3; }
+  .perks small { color: var(--muted-on-ink); font-size: .85rem; }
+  .bags { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; align-items: end; }
+  .bag { text-decoration: none; background: var(--white); color: var(--ink); border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 20px 40px rgba(0,0,0,.35); transition: transform .25s; }
+  .bag:nth-child(2) { transform: translateY(-28px); } .bag:hover { transform: translateY(-6px); } .bag:nth-child(2):hover { transform: translateY(-34px); }
+  .bag img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; background: var(--mist); }
+  .bag span { padding: 10px 12px; font-weight: 700; font-size: .9rem; line-height: 1.2; }
 
-  .band { padding: 0; }
-  .lead-h { padding-top: clamp(48px, 7vw, 88px); padding-bottom: 36px; margin: 0; max-width: 20ch; }
-  .path { display: block; padding: 8px var(--pad) 56px; text-decoration: none; position: relative; }
-  .path svg { margin-bottom: 28px; }
-  .path h3 { border-left: 3px solid var(--yellow); padding-left: 12px; margin-bottom: .5em; }
-  .path p { font-size: .95rem; max-width: 26ch; }
-  .more { font-weight: 600; border-bottom: 1.5px solid currentColor; }
-  .path:hover .more { color: var(--yellow); }
-  .supply-head { display: flex; justify-content: space-between; align-items: end; gap: 20px; flex-wrap: wrap; padding-top: 56px; padding-bottom: 36px; border-top: 1px solid var(--ln-on-ink); margin: 0; }
-  .supply-head h2 { margin: 0; max-width: 16ch; }
-  .cards { padding-bottom: clamp(48px, 7vw, 88px); }
-  .cards :global(.card) { height: 100%; }
+  .trust { list-style: none; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+  .trust li { display: flex; gap: 14px; align-items: center; } .trust small { font-size: .85rem; }
 
-  .learn-grid { display: grid; grid-template-columns: 1.5fr 1fr; }
-  .learn-text { padding: clamp(48px, 7vw, 88px) var(--pad); }
-  .learn-text h2 { max-width: 14ch; }
-  .guides { list-style: none; padding: 0; margin: 36px 0 0; display: grid; grid-template-columns: 1fr 1fr; gap: 0 28px; }
-  .guides a { display: flex; gap: 16px; align-items: center; text-decoration: none; padding: 16px 0; border-top: 1px solid var(--ln); }
-  .guides a:hover strong { text-decoration: underline; text-underline-offset: 3px; }
-  .guides img { width: 96px; height: 68px; object-fit: cover; background: var(--mist); flex: none; }
-  .guides span { display: flex; flex-direction: column; line-height: 1.35; } .guides small { font-size: .85rem; }
-  .learn-photos { display: grid; grid-template-columns: 1fr 1fr; grid-auto-rows: 1fr; }
-  .learn-photos img { width: 100%; height: 100%; object-fit: cover; min-height: 200px; }
-  .learn-photos img:nth-child(1) { grid-row: span 2; }
+  .biz-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(28px, 6vw, 80px); align-items: center; }
+  .biz-grid img { width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--radius); }
+  .biz-list { list-style: none; padding: 0; margin: 28px 0 32px; display: grid; gap: 20px; }
+  .biz-list li { border-left: 3px solid var(--yellow); padding-left: 16px; } .biz-list h3 { margin-bottom: .15em; } .biz-list p { margin: 0; }
 
-  @media (max-width: 900px) {
-    .hero-top { grid-template-columns: 1fr; }
-    .mosaic { grid-template-columns: repeat(3, 1fr); } .mosaic img:nth-child(n+4) { display: none; }
-    .learn-grid { grid-template-columns: 1fr; } .learn-photos { grid-auto-rows: 180px; }
+  .story { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px, 6vw, 80px); align-items: center; }
+  .story img { width: 100%; height: auto; aspect-ratio: 16 / 11; object-fit: cover; border-radius: var(--radius); }
+  .story p { max-width: 46ch; }
+
+  .tight-top { padding-top: 0; }
+  .lead { margin-bottom: 32px; }
+  .cta-row { margin-top: 36px; }
+
+  .guides { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+  .guides a { display: block; text-decoration: none; background: var(--cream); border: 1px solid var(--ln); border-radius: var(--radius); overflow: hidden; height: 100%; }
+  .guides a:hover h3 { text-decoration: underline; text-underline-offset: 3px; }
+  .guides img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; background: var(--mist); }
+  .guides h3, .guides p { padding: 0 18px; } .guides h3 { margin: 16px 0 .2em; } .guides p { margin: 0 0 18px; font-size: .95rem; }
+
+  .cta { border-radius: 12px; padding: clamp(32px, 6vw, 72px); background: linear-gradient(90deg, var(--ink) 40%, rgba(33,33,33,.55)), var(--cta) center / cover; }
+  .cta h2 { max-width: 16ch; } .cta p { max-width: 44ch; margin-bottom: 1.4em; }
+
+  @media (max-width: 960px) {
+    .hero-grid, .biz-grid, .story { grid-template-columns: 1fr; }
+    .trust { grid-template-columns: 1fr 1fr; } .guides { grid-template-columns: 1fr 1fr; }
+    .bags { max-width: 520px; }
   }
-  @media (max-width: 520px) { .guides { grid-template-columns: 1fr; } .mosaic { grid-template-columns: 1fr 1fr; } .mosaic img:nth-child(3) { display: none; } }
+  @media (max-width: 560px) { .trust { grid-template-columns: 1fr; } .guides { grid-template-columns: 1fr; } .bag span { font-size: .8rem; } }
+  @media (prefers-reduced-motion: reduce) { .bag { transition: none; } }
 </style>

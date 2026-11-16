@@ -22,3 +22,10 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# local cache of WordPress API responses
+.cache/
+
+# fake data for offline layout checks (never commit)
+src/lib/sample.ts
+.env.local

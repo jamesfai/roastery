@@ -4,7 +4,7 @@ import Base from '../layouts/Base.astro';
 <Base title="Contact Us" description="Get in touch with Daily Grind Roastery for retail and wholesale coffee enquiries.">
   <header class="page-head"><div class="frame"><h1>Contact us</h1><p>Questions about an order, wholesale supply or a custom blend? We'd love to hear from you.</p></div></header>
   <section class="band">
-    <div class="frame lines">
+    <div class="frame">
       <div class="cols">
         <div class="info pad">
           <h2>Visit the roastery</h2>
@@ -35,7 +35,8 @@ import Base from '../layouts/Base.astro';
   .info, .form { padding-top: clamp(36px, 6vw, 72px); padding-bottom: clamp(36px, 6vw, 72px); }
   address { font-style: normal; margin-bottom: 1.6em; }
   label { display: block; font-weight: 600; margin: 18px 0 6px; }
-  input, textarea { display: block; width: 100%; padding: 12px 14px; border: 1.5px solid var(--ink); border-radius: 0; font: inherit; background: var(--white); }
+  h2 { font-size: 1.6rem; }
+  input, textarea { display: block; width: 100%; padding: 12px 14px; border: 1.5px solid var(--ink); border-radius: 6px; font: inherit; background: var(--white); }
   button { margin-top: 22px; } button[disabled] { opacity: .5; cursor: not-allowed; }
   a { text-underline-offset: 3px; }
   @media (max-width: 800px) { .cols { grid-template-columns: 1fr; } }

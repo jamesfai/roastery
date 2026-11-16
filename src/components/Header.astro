@@ -1,16 +1,19 @@
 ---
-import { WP_URL, wcUrl } from '../lib/wp';
-const logo = `${WP_URL}/wp-content/uploads/2024/09/daily-grind-roastery-logo.webp`;
+import { logoUrl, wcUrl } from '../lib/wp';
+const logo = logoUrl;
 const path = Astro.url.pathname;
 const nav = [
-  { label: 'Retail', href: '/coffee-beans-retail/', children: [
+  { label: 'Shop', href: '/coffee-beans-retail/', children: [
+    { label: 'All retail', href: '/coffee-beans-retail/' },
     { label: 'Single Origin', href: '/coffee-beans-retail/single-origin/' },
     { label: 'House Blend', href: '/coffee-beans-retail/house-blend/' },
     { label: 'Drip Coffee', href: '/coffee-beans-retail/drip-coffee/' } ] },
   { label: 'Wholesale', href: '/wholesale-coffee-beans/', children: [
+    { label: 'All wholesale', href: '/wholesale-coffee-beans/' },
     { label: 'Single Origin', href: '/wholesale-coffee-beans/single-origin/' },
     { label: 'House Blend', href: '/wholesale-coffee-beans/house-blend/' } ] },
-  { label: 'Brewing Guides', href: '/brewing-guides/' },
+  { label: 'Brew guides', href: '/brewing-guides/' },
+  { label: 'Journal', href: '/blogs/' },
   { label: 'About', href: '/about-us/' },
   { label: 'Contact', href: '/contact-us/' },
 ];
@@ -30,38 +33,47 @@ const active = (href: string) => path === href || (href !== '/' && path.startsWi
             {n.children && <ul class="sub">{n.children.map((c) => <li><a href={c.href}>{c.label}</a></li>)}</ul>}
           </li>
         ))}
-        <li><a href={wcUrl.account}>Account</a></li>
-        <li><a class="btn sm" href={wcUrl.cart}>Cart</a></li>
       </ul>
+      <div class="tools">
+        <a class="icon" href={wcUrl.account} aria-label="My account">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4" /><path d="M4 21c1-4.5 4-6 8-6s7 1.5 8 6" /></svg>
+        </a>
+        <a class="icon" href={wcUrl.cart} aria-label="Cart">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1 12H6z" /><path d="M9 8V6a3 3 0 0 1 6 0v2" /></svg>
+        </a>
+      </div>
     </nav>
   </div>
 </header>
 <style>
-  .skip { position: absolute; left: -999px; top: 8px; background: var(--yellow); padding: 8px 14px; z-index: 100; font-weight: 600; }
+  .skip { position: absolute; left: -999px; top: 8px; background: var(--yellow); color: var(--ink); padding: 10px 16px; z-index: 100; font-weight: 700; }
   .skip:focus { left: 8px; }
-  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
-  .site-header { position: sticky; top: 0; z-index: 50; background: var(--white); border-bottom: 1px solid var(--ln); }
-  .bar { display: flex; align-items: center; justify-content: space-between; min-height: 76px; gap: 20px; }
-  .logo img { height: 44px; width: auto; }
+  .site-header { position: sticky; top: 0; z-index: 50; background: var(--ink); color: var(--white); border-bottom: 1px solid var(--ln-on-ink); }
+  .site-header :focus-visible { outline-color: var(--yellow); }
+  .bar { display: flex; align-items: center; justify-content: space-between; min-height: 80px; gap: 24px; }
+  .logo img { height: 44px; width: auto; filter: brightness(0) invert(1); }
+  nav { display: flex; align-items: center; gap: 28px; }
   nav > ul { display: flex; align-items: center; gap: 2px; list-style: none; margin: 0; padding: 0; }
-  nav a:not(.btn) { text-decoration: none; padding: 10px 14px; font-weight: 500; font-size: .95rem; display: block; border-bottom: 2px solid transparent; }
-  nav a:not(.btn):hover, nav a[aria-current] { border-bottom-color: var(--ink); }
-  nav .btn { margin-left: 10px; }
+  nav a:not(.icon) { text-decoration: none; padding: 10px 14px; font-weight: 600; font-size: .85rem; letter-spacing: .06em; text-transform: uppercase; display: block; border-bottom: 2px solid transparent; }
+  nav a:not(.icon):hover, nav a[aria-current] { border-bottom-color: var(--yellow); }
+  .tools { display: flex; gap: 4px; }
+  .icon { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 6px; }
+  .icon:hover { background: rgba(255,255,255,.1); color: var(--yellow); }
   .has-sub { position: relative; }
-  .sub { position: absolute; top: 100%; left: 0; min-width: 200px; background: var(--white); border: 1px solid var(--ink); padding: 6px; list-style: none; margin: 0; opacity: 0; visibility: hidden; transition: opacity .15s; }
+  .sub { position: absolute; top: 100%; left: 0; min-width: 210px; background: var(--ink-2); border: 1px solid var(--ln-on-ink); border-radius: var(--radius); padding: 6px; list-style: none; margin: 0; opacity: 0; visibility: hidden; transition: opacity .15s; }
   .has-sub:hover .sub, .has-sub:focus-within .sub { opacity: 1; visibility: visible; }
-  .sub a { border-bottom: 0 !important; } .sub a:hover { background: var(--yellow); }
+  .sub a { border-bottom: 0 !important; letter-spacing: .02em; text-transform: none; font-size: .95rem; font-weight: 500; } .sub a:hover { background: var(--yellow); color: var(--ink); }
   .nav-toggle, .burger { display: none; }
-  @media (max-width: 920px) {
-    .burger { display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; cursor: pointer; border: 1.5px solid var(--ink); }
-    .burger i, .burger i::before, .burger i::after { display: block; width: 22px; height: 2px; background: var(--ink); position: relative; }
+  @media (max-width: 1020px) {
+    .burger { display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; cursor: pointer; border: 1.5px solid var(--white); border-radius: 6px; }
+    .burger i, .burger i::before, .burger i::after { display: block; width: 22px; height: 2px; background: var(--white); position: relative; }
     .burger i::before, .burger i::after { content: ''; position: absolute; left: 0; } .burger i::before { top: -7px; } .burger i::after { top: 7px; }
-    .nav-toggle:focus-visible + .burger { outline: 2px solid var(--ink); outline-offset: 3px; }
-    nav { display: none; position: absolute; top: 100%; left: 0; right: 0; background: var(--white); border-bottom: 1px solid var(--ink); padding: 8px var(--pad) 24px; max-height: calc(100dvh - 76px); overflow: auto; }
-    .nav-toggle:checked ~ nav { display: block; }
+    .nav-toggle:focus-visible + .burger { outline: 3px solid var(--yellow); outline-offset: 3px; }
+    nav { display: none; position: absolute; top: 100%; left: 0; right: 0; background: var(--ink); border-bottom: 1px solid var(--ln-on-ink); padding: 8px var(--pad) 24px; max-height: calc(100dvh - 80px); overflow: auto; flex-direction: column; align-items: stretch; gap: 8px; }
+    .nav-toggle:checked ~ nav { display: flex; }
     nav > ul { flex-direction: column; align-items: stretch; }
-    nav a:not(.btn) { padding: 14px 0; border-bottom: 1px solid var(--ln); }
-    .sub { position: static; opacity: 1; visibility: visible; border: 0; padding: 0 0 0 16px; }
-    nav .btn { margin: 12px 0 0; }
+    nav a:not(.icon) { padding: 14px 0; border-bottom: 1px solid var(--ln-on-ink); }
+    .sub { position: static; opacity: 1; visibility: visible; border: 0; background: none; padding: 0 0 0 16px; }
+    .tools { padding-top: 8px; }
   }
 </style>
