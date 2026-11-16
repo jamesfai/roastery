@@ -29,3 +29,4 @@ pnpm-debug.log*
 # fake data for offline layout checks (never commit)
 src/lib/sample.ts
 .env.local
+src/lib/sample.snapshot.json

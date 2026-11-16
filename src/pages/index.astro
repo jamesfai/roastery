@@ -38,7 +38,7 @@ const business = [
 ---
 <Base title="Freshly Roasted Coffee Beans | Daily Grind Roastery">
   <!-- Hero -->
-  <section class="hero ink" style={`--hero:url("${photos.roaster}")`}>
+  <section class="hero">
     <div class="frame pad hero-grid">
       <div class="hero-copy">
         <h1>Expertly roasted.<br />Ready for every <span class="hl">brew.</span></h1>
@@ -50,7 +50,7 @@ const business = [
         <ul class="perks">
           {perks.map((p) => (
             <li>
-              <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="var(--yellow)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={icon[p.i as keyof typeof icon]} /></svg>
+              <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="var(--ink)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={icon[p.i as keyof typeof icon]} /></svg>
               <span><strong>{p.t}</strong><small>{p.d}</small></span>
             </li>
           ))}
@@ -68,7 +68,7 @@ const business = [
   </section>
 
   <!-- Trust strip -->
-  <section class="band white tight">
+  <section class="band cream tight">
     <ul class="frame pad trust">
       {trust.map((t) => (
         <li>
@@ -80,13 +80,13 @@ const business = [
   </section>
 
   <!-- For businesses -->
-  <section class="band ink biz">
+  <section class="band biz">
     <div class="frame pad biz-grid">
       <div>
-        <span class="kicker hl">For cafés and retailers</span>
+        <span class="kicker">For cafés and retailers</span>
         <h2>Your trusted partner for premium coffee</h2>
         <ul class="biz-list">
-          {business.map(([t, d]) => <li><h3>{t}</h3><p class="muted">{d}</p></li>)}
+          {business.map(([t, d]) => <li><h3>{t}</h3><p>{d}</p></li>)}
         </ul>
         <a class="btn" href="/wholesale-coffee-beans/">Shop wholesale</a>
       </div>
@@ -95,7 +95,7 @@ const business = [
   </section>
 
   <!-- Story -->
-  <section class="band">
+  <section class="band cream">
     <div class="frame pad story">
       <img src={photos.roasterOn} alt="Turning on the coffee roaster at Daily Grind Roastery" width="640" height="440" loading="lazy" />
       <div>
@@ -108,7 +108,7 @@ const business = [
   </section>
 
   <!-- Our coffees -->
-  <section class="band tight-top">
+  <section class="band">
     <div class="frame">
       <h2 class="center">Our coffees</h2>
       <p class="center muted lead">Best-selling roasts, ground to your brew method at checkout.</p>
@@ -118,7 +118,7 @@ const business = [
   </section>
 
   <!-- Brewing guides -->
-  <section class="band white">
+  <section class="band cream">
     <div class="frame pad">
       <div class="section-head">
         <div><span class="kicker">Brewing guides</span><h2>Learn to brew a better cup</h2></div>
@@ -154,10 +154,10 @@ const business = [
   <!-- Closing CTA -->
   <section class="band tight-top">
     <div class="frame pad">
-      <div class="cta ink" style={`--cta:url("${photos.beans}")`}>
+      <div class="cta" style={`--cta:url("${photos.beans}")`}>
         <div>
           <h2>Running a café? <span class="hl">Let's talk wholesale.</span></h2>
-          <p class="muted">Bulk single origins and house blends, with custom branding available.</p>
+          <p>Bulk single origins and house blends, with custom branding available.</p>
           <div class="btn-row"><a class="btn" href="/wholesale-coffee-beans/">Browse wholesale</a><a class="btn outline" href="/contact-us/">Contact us</a></div>
         </div>
       </div>
@@ -166,16 +166,16 @@ const business = [
 </Base>
 
 <style>
-  .hero { background: linear-gradient(90deg, var(--ink) 30%, rgba(33,33,33,.78) 70%, rgba(33,33,33,.6)), var(--hero) center / cover; padding: clamp(48px, 8vw, 104px) 0; }
+  .hero { background: var(--white); padding: clamp(40px, 7vw, 96px) 0 clamp(56px, 8vw, 104px); overflow: hidden; }
   .hero-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(24px, 5vw, 64px); align-items: center; }
   .hero h1 { margin-bottom: .35em; }
-  .sub { font-size: 1.15rem; max-width: 44ch; color: var(--muted-on-ink); margin-bottom: 1.6em; }
+  .sub { font-size: 1.15rem; max-width: 44ch; color: var(--muted); margin-bottom: 1.6em; }
   .perks { list-style: none; padding: 0; margin: 40px 0 0; display: flex; gap: 28px; flex-wrap: wrap; }
   .perks li { display: flex; gap: 12px; align-items: center; max-width: 200px; }
   .perks span, .trust span { display: flex; flex-direction: column; line-height: 1.3; }
-  .perks small { color: var(--muted-on-ink); font-size: .85rem; }
-  .bags { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; align-items: end; }
-  .bag { text-decoration: none; background: var(--white); color: var(--ink); border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 20px 40px rgba(0,0,0,.35); transition: transform .25s; }
+  .perks small { color: var(--muted); font-size: .85rem; }
+  .bags { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; align-items: end; background: var(--yellow); padding: 40px 24px 24px; border-radius: 12px; }
+  .bag { text-decoration: none; background: var(--white); color: var(--ink); border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 14px 28px rgba(33,33,33,.18); transition: transform .25s; }
   .bag:nth-child(2) { transform: translateY(-28px); } .bag:hover { transform: translateY(-6px); } .bag:nth-child(2):hover { transform: translateY(-34px); }
   .bag img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; background: var(--mist); }
   .bag span { padding: 10px 12px; font-weight: 700; font-size: .9rem; line-height: 1.2; }
@@ -186,7 +186,7 @@ const business = [
   .biz-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(28px, 6vw, 80px); align-items: center; }
   .biz-grid img { width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--radius); }
   .biz-list { list-style: none; padding: 0; margin: 28px 0 32px; display: grid; gap: 20px; }
-  .biz-list li { border-left: 3px solid var(--yellow); padding-left: 16px; } .biz-list h3 { margin-bottom: .15em; } .biz-list p { margin: 0; }
+  .biz-list li { border-left: 3px solid var(--yellow); padding-left: 16px; } .biz-list h3 { margin-bottom: .15em; } .biz-list p { margin: 0; color: var(--muted); }
 
   .story { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px, 6vw, 80px); align-items: center; }
   .story img { width: 100%; height: auto; aspect-ratio: 16 / 11; object-fit: cover; border-radius: var(--radius); }
@@ -202,7 +202,9 @@ const business = [
   .guides img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; background: var(--mist); }
   .guides h3, .guides p { padding: 0 18px; } .guides h3 { margin: 16px 0 .2em; } .guides p { margin: 0 0 18px; font-size: .95rem; }
 
-  .cta { border-radius: 12px; padding: clamp(32px, 6vw, 72px); background: linear-gradient(90deg, var(--ink) 40%, rgba(33,33,33,.55)), var(--cta) center / cover; }
+  .cta { border-radius: 12px; padding: clamp(32px, 6vw, 72px); background: linear-gradient(90deg, var(--yellow) 45%, rgba(250,238,138,.8)), var(--cta) center / cover; color: var(--ink); }
+  .cta .btn { background: var(--ink); color: var(--yellow); border-color: var(--ink); } .cta .btn:hover { background: var(--white); color: var(--ink); }
+  .cta .btn.outline { background: transparent; color: var(--ink); } .cta .btn.outline:hover { background: var(--ink); color: var(--yellow); }
   .cta h2 { max-width: 16ch; } .cta p { max-width: 44ch; margin-bottom: 1.4em; }
 
   @media (max-width: 960px) {

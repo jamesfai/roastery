@@ -48,31 +48,30 @@ const active = (href: string) => path === href || (href !== '/' && path.startsWi
 <style>
   .skip { position: absolute; left: -999px; top: 8px; background: var(--yellow); color: var(--ink); padding: 10px 16px; z-index: 100; font-weight: 700; }
   .skip:focus { left: 8px; }
-  .site-header { position: sticky; top: 0; z-index: 50; background: var(--ink); color: var(--white); border-bottom: 1px solid var(--ln-on-ink); }
-  .site-header :focus-visible { outline-color: var(--yellow); }
+  .site-header { position: sticky; top: 0; z-index: 50; background: var(--white); color: var(--ink); border-bottom: 1px solid var(--ln); }
   .bar { display: flex; align-items: center; justify-content: space-between; min-height: 80px; gap: 24px; }
-  .logo img { height: 44px; width: auto; filter: brightness(0) invert(1); }
+  .logo img { height: 44px; width: auto; }
   nav { display: flex; align-items: center; gap: 28px; }
   nav > ul { display: flex; align-items: center; gap: 2px; list-style: none; margin: 0; padding: 0; }
   nav a:not(.icon) { text-decoration: none; padding: 10px 14px; font-weight: 600; font-size: .85rem; letter-spacing: .06em; text-transform: uppercase; display: block; border-bottom: 2px solid transparent; }
-  nav a:not(.icon):hover, nav a[aria-current] { border-bottom-color: var(--yellow); }
+  nav a:not(.icon):hover, nav a[aria-current] { border-bottom-color: var(--ink); background: var(--yellow); }
   .tools { display: flex; gap: 4px; }
   .icon { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 6px; }
-  .icon:hover { background: rgba(255,255,255,.1); color: var(--yellow); }
+  .icon:hover { background: var(--yellow); }
   .has-sub { position: relative; }
-  .sub { position: absolute; top: 100%; left: 0; min-width: 210px; background: var(--ink-2); border: 1px solid var(--ln-on-ink); border-radius: var(--radius); padding: 6px; list-style: none; margin: 0; opacity: 0; visibility: hidden; transition: opacity .15s; }
+  .sub { position: absolute; top: 100%; left: 0; min-width: 210px; background: var(--white); border: 1px solid var(--ink); border-radius: var(--radius); padding: 6px; list-style: none; margin: 0; opacity: 0; visibility: hidden; transition: opacity .15s; }
   .has-sub:hover .sub, .has-sub:focus-within .sub { opacity: 1; visibility: visible; }
-  .sub a { border-bottom: 0 !important; letter-spacing: .02em; text-transform: none; font-size: .95rem; font-weight: 500; } .sub a:hover { background: var(--yellow); color: var(--ink); }
+  .sub a { border-bottom: 0 !important; letter-spacing: .02em; text-transform: none; font-size: .95rem; font-weight: 500; } .sub a:hover { background: var(--yellow); }
   .nav-toggle, .burger { display: none; }
   @media (max-width: 1020px) {
-    .burger { display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; cursor: pointer; border: 1.5px solid var(--white); border-radius: 6px; }
-    .burger i, .burger i::before, .burger i::after { display: block; width: 22px; height: 2px; background: var(--white); position: relative; }
+    .burger { display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; cursor: pointer; border: 1.5px solid var(--ink); border-radius: 6px; }
+    .burger i, .burger i::before, .burger i::after { display: block; width: 22px; height: 2px; background: var(--ink); position: relative; }
     .burger i::before, .burger i::after { content: ''; position: absolute; left: 0; } .burger i::before { top: -7px; } .burger i::after { top: 7px; }
-    .nav-toggle:focus-visible + .burger { outline: 3px solid var(--yellow); outline-offset: 3px; }
-    nav { display: none; position: absolute; top: 100%; left: 0; right: 0; background: var(--ink); border-bottom: 1px solid var(--ln-on-ink); padding: 8px var(--pad) 24px; max-height: calc(100dvh - 80px); overflow: auto; flex-direction: column; align-items: stretch; gap: 8px; }
+    .nav-toggle:focus-visible + .burger { outline: 3px solid var(--ink); outline-offset: 3px; }
+    nav { display: none; position: absolute; top: 100%; left: 0; right: 0; background: var(--white); border-bottom: 1px solid var(--ink); padding: 8px var(--pad) 24px; max-height: calc(100dvh - 80px); overflow: auto; flex-direction: column; align-items: stretch; gap: 8px; }
     .nav-toggle:checked ~ nav { display: flex; }
     nav > ul { flex-direction: column; align-items: stretch; }
-    nav a:not(.icon) { padding: 14px 0; border-bottom: 1px solid var(--ln-on-ink); }
+    nav a:not(.icon) { padding: 14px 0; border-bottom: 1px solid var(--ln); }
     .sub { position: static; opacity: 1; visibility: visible; border: 0; background: none; padding: 0 0 0 16px; }
     .tools { padding-top: 8px; }
   }

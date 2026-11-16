@@ -37,7 +37,7 @@ const { post, more, newer, older } = Astro.props;
     </div>
   </article>
   {more.length > 0 && (
-    <section class="band white">
+    <section class="band cream">
       <div class="frame">
         <h2 class="pad">Keep reading</h2>
         <div class="grid3">{more.map((p) => <BlogCard post={p} />)}</div>
@@ -47,10 +47,10 @@ const { post, more, newer, older } = Astro.props;
 </Base>
 <style>
   .narrow { max-width: 860px; }
-  .page-head .meta { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; margin-top: 20px; color: var(--muted-on-ink); font-size: .95rem; }
+  .page-head .meta { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; margin-top: 20px; color: var(--muted); font-size: .95rem; }
   .page-head .tag { text-decoration: none; }
   .post { padding-top: 0; }
-  .hero-img { width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 0 0 var(--radius) var(--radius); margin-bottom: 40px; }
+  .hero-img { width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; border-radius: var(--radius); margin: 32px 0 40px; }
   .prose { margin: 0 auto; }
   .pager { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 56px; padding-top: 28px; border-top: 1px solid var(--ln); }
   .pager a { text-decoration: none; display: flex; flex-direction: column; gap: 4px; padding: 14px 0; font-weight: 700; }

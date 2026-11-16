@@ -182,8 +182,8 @@ export const wcUrl = {
   addToCart: (id: number) => `${WP_URL}/?add-to-cart=${id}`,
 };
 
-const up = (p: string) => (S ? S.samplePhoto(p.split('/').pop()!.slice(0, 28), (p.length * 37) % 360) : `${WP_URL}/wp-content/uploads/${p}`);
-export const logoUrl = S ? S.sampleLogo : `${WP_URL}/wp-content/uploads/2024/09/daily-grind-roastery-logo.webp`;
+const up = (p: string) => `${WP_URL}/wp-content/uploads/${p}`;
+export const logoUrl = `${WP_URL}/wp-content/uploads/2024/09/daily-grind-roastery-logo.webp`;
 /** Lifestyle photos already in the WordPress media library. */
 export const photos = {
   beans: up('2025/03/coffee-beans-1-1024x682.jpg'),
