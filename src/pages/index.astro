@@ -8,6 +8,7 @@ import { homeGuidesHtml, homeJournalHtml } from '../lib/site.mjs';
       <img class="hero-img" src="/assets/img/m-hero-roaster.webp" width="1920" height="1072" fetchpriority="high" alt="A roaster's sample scoop holding freshly roasted coffee beans over the roasting drum">
       <div class="wrap hero-inner">
         <div class="hero-copy">
+          <p class="status"><span class="live" aria-hidden="true"></span>Small-batch roastery · San Pedro City, Laguna</p>
           <h1>Expertly roasted. Ready for every <span class="mark">brew.</span></h1>
           <p class="lead">Small-batch roasted coffee beans for home brewers and café owners, roasted in San Pedro City, Laguna.</p>
           <div class="btn-row">
@@ -30,12 +31,13 @@ import { homeGuidesHtml, homeJournalHtml } from '../lib/site.mjs';
     <section class="section brew" id="brew">
       <div class="wrap brew-grid">
         <div class="brew-text">
+          <p class="eyebrow reveal"><span>01</span>Brew</p>
           <h2 class="reveal">How do you brew?</h2>
           <div class="methods" role="group" aria-label="Brew method">
-            <button type="button" class="method" aria-pressed="true" data-m="espresso">Espresso</button>
-            <button type="button" class="method" aria-pressed="false" data-m="pourover">Pour-over</button>
-            <button type="button" class="method" aria-pressed="false" data-m="press">French press</button>
-            <button type="button" class="method" aria-pressed="false" data-m="cold">Cold brew</button>
+            <button type="button" class="method" aria-pressed="true" data-m="espresso" data-i="01">Espresso</button>
+            <button type="button" class="method" aria-pressed="false" data-m="pourover" data-i="02">Pour-over</button>
+            <button type="button" class="method" aria-pressed="false" data-m="press" data-i="03">French press</button>
+            <button type="button" class="method" aria-pressed="false" data-m="cold" data-i="04">Cold brew</button>
           </div>
           <div class="advice" aria-live="polite">
             <div class="adv" data-for="espresso"><p><span class="label">Try</span> <strong>Caramelo</strong>, a house blend with caramel, nuts and a little fruit. Ask for a fine grind.</p><a class="link" href="/caramelo/">Get Caramelo, from ₱395</a></div>
@@ -56,6 +58,7 @@ import { homeGuidesHtml, homeJournalHtml } from '../lib/site.mjs';
     <!-- Beans -->
     <section class="section beans" id="beans">
       <div class="wrap">
+        <p class="eyebrow reveal"><span>02</span>Beans</p>
         <div class="head reveal">
           <h2>Our best-selling roasts</h2>
           <a class="link" href="/coffee-beans-retail/">View all coffee</a>
@@ -76,6 +79,7 @@ import { homeGuidesHtml, homeJournalHtml } from '../lib/site.mjs';
     <section class="section cream wholesale" id="wholesale">
       <div class="wrap ws">
         <div class="ws-text">
+          <p class="eyebrow reveal"><span>03</span>Wholesale</p>
           <h2 class="big-h reveal">Coffee for your café.</h2>
           <p class="lede reveal">Cafés, retailers and corporate clients get steady supply from one roastery.</p>
           <div class="btn-row reveal">
@@ -96,6 +100,7 @@ import { homeGuidesHtml, homeJournalHtml } from '../lib/site.mjs';
     <section class="story" id="story">
       <figure class="story-pic"><img src="/assets/img/m-roast.webp" width="1200" height="1490" loading="lazy" alt="Freshly roasted coffee beans pouring from a steaming cooling tray"></figure>
       <div class="story-text">
+        <p class="eyebrow reveal"><span>04</span>Story</p>
         <h2 class="reveal">Great coffee, <span class="mark">roasted with care.</span></h2>
         <p class="lede reveal">We combine expertise, dedication and a love for coffee to craft exceptional roasts, single origins and signature blends.</p>
         <p class="muted reveal">Every roast starts at our roastery in San Pedro City, Laguna, and ends in your cup or your café.</p>
@@ -105,6 +110,7 @@ import { homeGuidesHtml, homeJournalHtml } from '../lib/site.mjs';
 
     <!-- Learn -->
     <section class="section learn" id="learn">
+      <div class="wrap"><p class="eyebrow reveal"><span>05</span>Learn</p></div>
       <div class="wrap learn-grid">
         <div>
           <h2 class="reveal">Brewing guides</h2>
@@ -122,6 +128,7 @@ import { homeGuidesHtml, homeJournalHtml } from '../lib/site.mjs';
     <section class="section cream" id="contact">
       <div class="wrap contact">
         <div class="reveal">
+          <p class="eyebrow"><span>06</span>Contact</p>
           <h2>Visit or get in touch</h2>
           <p class="muted">Questions about an order, wholesale supply or a custom blend? Send a message or call.</p>
           <dl class="details">
