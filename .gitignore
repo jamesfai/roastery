@@ -32,6 +32,6 @@ src/lib/sample.ts
 src/lib/sample.snapshot.json
 
 # raw source photos, generated originals and local tool settings (not needed to build)
-assets/
+/assets/
 .claude/
 tools/.cache/
