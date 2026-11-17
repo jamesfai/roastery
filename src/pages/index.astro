@@ -1,217 +1,149 @@
 ---
-import Base from '../layouts/Base.astro';
-import ProductCard from '../components/ProductCard.astro';
-import BlogCard from '../components/BlogCard.astro';
-import { getProducts, getPosts, photos, guides, type BlogPost } from '../lib/wp';
-
-const all = await getProducts();
-const pick = (slugs: string[]) => slugs.map((s) => all.find((p) => p.slug === s)).filter((p) => !!p);
-const heroBags = pick(['nicaragua-shg', 'ethiopia-yirgacheffe', 'caramelo']);
-const featured = pick(['nicaragua-shg', 'sumatra-mandheling', 'ethiopia-yirgacheffe', 'guatemala']);
-let posts: BlogPost[] = [];
-try { posts = (await getPosts()).slice(0, 3); } catch (e) { console.warn('[home] blog posts unavailable', (e as Error).message); }
-
-const icon = {
-  flame: 'M12 3c1 4 5 6 5 11a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-4-2-5 1-10z',
-  truck: 'M2 6h11v10H2zM13 10h4l3 3v3h-7zM6 19a1.5 1.5 0 1 0 0-.01M17 19a1.5 1.5 0 1 0 0-.01',
-  lock: 'M6 11h12v9H6zM8 11V8a4 4 0 0 1 8 0v3',
-  bean: 'M12 3c4 0 7 4 7 9s-3 9-7 9-7-4-7-9 3-9 7-9zM9 19c4-3 5-8 6-14',
-  box: 'M3 8l9-5 9 5v8l-9 5-9-5zM3 8l9 5 9-5M12 13v8',
-  heart: 'M12 20s-8-5-8-11a4.5 4.5 0 0 1 8-2.5A4.5 4.5 0 0 1 20 9c0 6-8 11-8 11z',
-};
-const perks = [
-  { i: 'flame', t: 'Small-batch roasted', d: 'Roasted to order for peak freshness.' },
-  { i: 'bean', t: 'Specialty grade beans', d: 'Single origins and house blends.' },
-  { i: 'box', t: 'Retail and wholesale', d: 'From one bag to café volumes.' },
-];
-const trust = [
-  { i: 'flame', t: 'Freshly roasted', d: 'Roasted in small batches' },
-  { i: 'lock', t: 'Secure checkout', d: 'Protected WooCommerce payments' },
-  { i: 'truck', t: 'Ships from Laguna', d: 'Delivery across the Philippines' },
-  { i: 'heart', t: 'Made for every brew', d: 'Choose your grind at checkout' },
-];
-const business = [
-  ['Small-batch roasting', 'Every batch is roasted with care so your café serves the same great cup each day.'],
-  ['Specialty coffee supply', 'Reliable bulk supply for cafés, retailers and corporate clients nationwide.'],
-  ['Custom coffee branding', 'Custom blends, packaging and labeling to make the coffee your own.'],
-];
+import Site from '../layouts/Site.astro';
+import { homeGuidesHtml, homeJournalHtml } from '../lib/site.mjs';
 ---
-<Base title="Freshly Roasted Coffee Beans | Daily Grind Roastery">
-  <!-- Hero -->
-  <section class="hero">
-    <div class="frame pad hero-grid">
-      <div class="hero-copy">
-        <h1>Expertly roasted.<br />Ready for every <span class="hl">brew.</span></h1>
-        <p class="sub">Premium, small-batch roasted coffee for home brewers and café owners. Freshly roasted in Laguna, Philippines.</p>
-        <div class="btn-row">
-          <a class="btn" href="/coffee-beans-retail/">Shop coffee</a>
-          <a class="btn outline" href="/about-us/">Our story</a>
+<Site title="Daily Grind Roastery | Freshly roasted coffee beans in Laguna" description="Small-batch roasted coffee beans for home brewers and cafés. Single origins, house blends and drip coffee, roasted in San Pedro City, Laguna. Retail and wholesale." path="/" image="/assets/img/og.jpg" preload="/assets/img/m-hero-roaster.webp">
+    <!-- Hero -->
+    <section class="hero hero--photo" id="top">
+      <img class="hero-img" src="/assets/img/m-hero-roaster.webp" width="1920" height="1072" fetchpriority="high" alt="A roaster's sample scoop holding freshly roasted coffee beans over the roasting drum">
+      <div class="wrap hero-inner">
+        <div class="hero-copy">
+          <h1>Expertly roasted. Ready for every <span class="mark">brew.</span></h1>
+          <p class="lead">Small-batch roasted coffee beans for home brewers and café owners, roasted in San Pedro City, Laguna.</p>
+          <div class="btn-row">
+            <a class="btn" href="/coffee-beans-retail/">Shop coffee</a>
+            <a class="btn btn-ghost" href="/wholesale-coffee-beans/">Wholesale</a>
+          </div>
         </div>
-        <ul class="perks">
-          {perks.map((p) => (
-            <li>
-              <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="var(--ink)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={icon[p.i as keyof typeof icon]} /></svg>
-              <span><strong>{p.t}</strong><small>{p.d}</small></span>
-            </li>
-          ))}
-        </ul>
-      </div>
-      <div class="bags" aria-label="Best-selling roasts">
-        {heroBags.map((b) => (
-          <a href={`/products/${b!.slug}/`} class="bag">
-            <img src={b!.images[0].src} alt={b!.name} width="400" height="400" loading="eager" />
-            <span>{b!.name}</span>
-          </a>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <!-- Trust strip -->
-  <section class="band cream tight">
-    <ul class="frame pad trust">
-      {trust.map((t) => (
-        <li>
-          <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="var(--ink)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={icon[t.i as keyof typeof icon]} /></svg>
-          <span><strong>{t.t}</strong><small class="muted">{t.d}</small></span>
-        </li>
-      ))}
-    </ul>
-  </section>
-
-  <!-- For businesses -->
-  <section class="band biz">
-    <div class="frame pad biz-grid">
-      <div>
-        <span class="kicker">For cafés and retailers</span>
-        <h2>Your trusted partner for premium coffee</h2>
-        <ul class="biz-list">
-          {business.map(([t, d]) => <li><h3>{t}</h3><p>{d}</p></li>)}
-        </ul>
-        <a class="btn" href="/wholesale-coffee-beans/">Shop wholesale</a>
-      </div>
-      <img src={photos.drinking} alt="A cup of freshly brewed coffee" width="640" height="480" loading="lazy" />
-    </div>
-  </section>
-
-  <!-- Story -->
-  <section class="band cream">
-    <div class="frame pad story">
-      <img src={photos.roasterOn} alt="Turning on the coffee roaster at Daily Grind Roastery" width="640" height="440" loading="lazy" />
-      <div>
-        <span class="kicker">Our story</span>
-        <h2>Great coffee. <span class="hl">Roasted with care.</span></h2>
-        <p>Daily Grind Roastery brings expertise, dedication and a love for coffee to every roast. We craft exceptional single origins and signature blends, then deliver them to your cup or your café.</p>
-        <a class="btn" href="/about-us/">Learn more</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Our coffees -->
-  <section class="band">
-    <div class="frame">
-      <h2 class="center">Our coffees</h2>
-      <p class="center muted lead">Best-selling roasts, ground to your brew method at checkout.</p>
-      <div class="grid4">{featured.map((p) => <ProductCard product={p!} />)}</div>
-      <p class="center cta-row"><a class="btn outline" href="/coffee-beans-retail/">View all coffees</a></p>
-    </div>
-  </section>
-
-  <!-- Brewing guides -->
-  <section class="band cream">
-    <div class="frame pad">
-      <div class="section-head">
-        <div><span class="kicker">Brewing guides</span><h2>Learn to brew a better cup</h2></div>
-        <a class="btn outline" href="/brewing-guides/">All guides</a>
-      </div>
-      <ul class="guides">
-        {guides.map((g) => (
-          <li>
-            <a href={g.href}>
-              <img src={g.img} alt="" width="320" height="230" loading="lazy" />
-              <h3>{g.title}</h3>
-              <p class="muted">{g.blurb}</p>
-            </a>
-          </li>
-        ))}
-      </ul>
-    </div>
-  </section>
-
-  <!-- Journal -->
-  {posts.length > 0 && (
-    <section class="band">
-      <div class="frame">
-        <div class="section-head pad">
-          <div><span class="kicker">The Roast Journal</span><h2>Stories from the roastery</h2></div>
-          <a class="btn outline" href="/blogs/">All articles</a>
-        </div>
-        <div class="grid3">{posts.map((p) => <BlogCard post={p} />)}</div>
       </div>
     </section>
-  )}
+    <div class="facts">
+      <ul class="wrap">
+        <li>Roasted in small batches</li>
+        <li>Single origins and blends</li>
+        <li>Pick your size and grind</li>
+        <li>Retail and wholesale</li>
+      </ul>
+    </div>
 
-  <!-- Closing CTA -->
-  <section class="band tight-top">
-    <div class="frame pad">
-      <div class="cta" style={`--cta:url("${photos.beans}")`}>
-        <div>
-          <h2>Running a café? <span class="hl">Let's talk wholesale.</span></h2>
-          <p>Bulk single origins and house blends, with custom branding available.</p>
-          <div class="btn-row"><a class="btn" href="/wholesale-coffee-beans/">Browse wholesale</a><a class="btn outline" href="/contact-us/">Contact us</a></div>
+    <!-- Brew method: the one interaction -->
+    <section class="section brew" id="brew">
+      <div class="wrap brew-grid">
+        <div class="brew-text">
+          <h2 class="reveal">How do you brew?</h2>
+          <div class="methods" role="group" aria-label="Brew method">
+            <button type="button" class="method" aria-pressed="true" data-m="espresso">Espresso</button>
+            <button type="button" class="method" aria-pressed="false" data-m="pourover">Pour-over</button>
+            <button type="button" class="method" aria-pressed="false" data-m="press">French press</button>
+            <button type="button" class="method" aria-pressed="false" data-m="cold">Cold brew</button>
+          </div>
+          <div class="advice" aria-live="polite">
+            <div class="adv" data-for="espresso"><p><span class="label">Try</span> <strong>Caramelo</strong>, a house blend with caramel, nuts and a little fruit. Ask for a fine grind.</p><a class="link" href="/caramelo/">Get Caramelo, from ₱395</a></div>
+            <div class="adv" data-for="pourover"><p><span class="label">Try</span> <strong>Ethiopia Yirgacheffe</strong>, with fruits, berries, chocolate, citrus and florals. Ask for a medium-fine grind.</p><a class="link" href="/ethiopia-yirgacheffe/">Get Yirgacheffe, from ₱520</a></div>
+            <div class="adv" data-for="press"><p><span class="label">Try</span> <strong>Sumatra Mandheling</strong>, a single origin for a full cup. Ask for a coarse grind.</p><a class="link" href="/sumatra-mandheling/">Get Sumatra, from ₱420</a></div>
+            <div class="adv" data-for="cold"><p><span class="label">Try</span> <strong>Nicaragua SHG</strong>, with nuts and vanilla bean, smooth over ice. Ask for a coarse grind.</p><a class="link" href="/nicaragua-shg/">Get Nicaragua, from ₱420</a></div>
+          </div>
+        </div>
+        <div class="brew-pics" aria-hidden="true">
+          <img class="bp" data-for="espresso" src="/assets/img/m-espresso.webp" alt="" width="900" height="900" loading="lazy">
+          <img class="bp" data-for="pourover" src="/assets/img/m-pourover.webp" alt="" width="900" height="900" loading="lazy">
+          <img class="bp" data-for="press" src="/assets/img/m-press.webp" alt="" width="900" height="900" loading="lazy">
+          <img class="bp" data-for="cold" src="/assets/img/m-cold.webp" alt="" width="900" height="900" loading="lazy">
         </div>
       </div>
-    </div>
-  </section>
-</Base>
+    </section>
 
-<style>
-  .hero { background: var(--white); padding: clamp(40px, 7vw, 96px) 0 clamp(56px, 8vw, 104px); overflow: hidden; }
-  .hero-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(24px, 5vw, 64px); align-items: center; }
-  .hero h1 { margin-bottom: .35em; }
-  .sub { font-size: 1.15rem; max-width: 44ch; color: var(--muted); margin-bottom: 1.6em; }
-  .perks { list-style: none; padding: 0; margin: 40px 0 0; display: flex; gap: 28px; flex-wrap: wrap; }
-  .perks li { display: flex; gap: 12px; align-items: center; max-width: 200px; }
-  .perks span, .trust span { display: flex; flex-direction: column; line-height: 1.3; }
-  .perks small { color: var(--muted); font-size: .85rem; }
-  .bags { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; align-items: end; background: var(--yellow); padding: 40px 24px 24px; border-radius: 12px; }
-  .bag { text-decoration: none; background: var(--white); color: var(--ink); border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 14px 28px rgba(33,33,33,.18); transition: transform .25s; }
-  .bag:nth-child(2) { transform: translateY(-28px); } .bag:hover { transform: translateY(-6px); } .bag:nth-child(2):hover { transform: translateY(-34px); }
-  .bag img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; background: var(--mist); }
-  .bag span { padding: 10px 12px; font-weight: 700; font-size: .9rem; line-height: 1.2; }
+    <!-- Beans -->
+    <section class="section beans" id="beans">
+      <div class="wrap">
+        <div class="head reveal">
+          <h2>Our best-selling roasts</h2>
+          <a class="link" href="/coffee-beans-retail/">View all coffee</a>
+        </div>
+        <ul class="bean-grid">
+          <li class="reveal"><a href="/nicaragua-shg/"><span class="pic"><img src="/assets/img/p-nicaragua.webp" alt="" width="640" height="640" loading="lazy"></span><span class="kind">Single origin</span><h3>Nicaragua SHG</h3><span class="price">From ₱420</span></a></li>
+          <li class="reveal"><a href="/ethiopia-yirgacheffe/"><span class="pic"><img src="/assets/img/p-yirgacheffe.webp" alt="" width="640" height="640" loading="lazy"></span><span class="kind">Single origin</span><h3>Ethiopia Yirgacheffe</h3><span class="price">From ₱520</span></a></li>
+          <li class="reveal"><a href="/sumatra-mandheling/"><span class="pic"><img src="/assets/img/p-sumatra.webp" alt="" width="640" height="640" loading="lazy"></span><span class="kind">Single origin</span><h3>Sumatra Mandheling</h3><span class="price">From ₱420</span></a></li>
+          <li class="reveal"><a href="/guatemala/"><span class="pic"><img src="/assets/img/p-guatemala.webp" alt="" width="640" height="640" loading="lazy"></span><span class="kind">Single origin</span><h3>Guatemala</h3><span class="price">From ₱420</span></a></li>
+          <li class="reveal"><a href="/caramelo/"><span class="pic"><img src="/assets/img/p-caramelo.webp" alt="" width="640" height="640" loading="lazy"></span><span class="kind">House blend</span><h3>Caramelo</h3><span class="price">From ₱395</span></a></li>
+          <li class="reveal"><a href="/bliss/"><span class="pic"><img src="/assets/img/p-bliss.webp" alt="" width="640" height="640" loading="lazy"></span><span class="kind">House blend</span><h3>Bliss</h3><span class="price">From ₱340</span></a></li>
+        </ul>
+        <p class="more-line reveal">Also in the store: <a class="link" href="/coffee-beans-retail/drip-coffee/">Drip coffee from ₱45</a></p>
+      </div>
+    </section>
 
-  .trust { list-style: none; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
-  .trust li { display: flex; gap: 14px; align-items: center; } .trust small { font-size: .85rem; }
+    <!-- Wholesale -->
+    <section class="section cream wholesale" id="wholesale">
+      <div class="wrap ws">
+        <div class="ws-text">
+          <h2 class="big-h reveal">Coffee for your café.</h2>
+          <p class="lede reveal">Cafés, retailers and corporate clients get steady supply from one roastery.</p>
+          <div class="btn-row reveal">
+            <a class="btn" href="/wholesale-coffee-beans/">Shop wholesale</a>
+            <a class="btn btn-ghost" href="#contact">Ask about custom branding</a>
+          </div>
+        </div>
+        <figure class="ws-pic reveal"><img src="/assets/img/m-cafe.webp" width="1200" height="1490" loading="lazy" alt="A barista's hands pouring steamed milk into a white cup at a bright café counter"></figure>
+      </div>
+      <ul class="wrap three">
+        <li class="reveal"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3c1 4 5 6 5 11a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-4-2-5 1-10z"/></svg></span><h3>Small-batch roasting</h3><p>Every batch is roasted with care, so your café serves the same good cup each day.</p></li>
+        <li class="reveal"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 8l9-5 9 5v8l-9 5-9-5zM3 8l9 5 9-5M12 13v8"/></svg></span><h3>Specialty coffee supply</h3><p>Single origins and house blends in bulk sizes, supplied to businesses nationwide.</p></li>
+        <li class="reveal"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 12V4h8l10 10-8 8L3 12z"/><circle cx="7.5" cy="8.5" r="1.4"/></svg></span><h3>Custom coffee branding</h3><p>Custom blends, packaging and labeling to make the coffee yours.</p></li>
+      </ul>
+    </section>
 
-  .biz-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(28px, 6vw, 80px); align-items: center; }
-  .biz-grid img { width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--radius); }
-  .biz-list { list-style: none; padding: 0; margin: 28px 0 32px; display: grid; gap: 20px; }
-  .biz-list li { border-left: 3px solid var(--yellow); padding-left: 16px; } .biz-list h3 { margin-bottom: .15em; } .biz-list p { margin: 0; color: var(--muted); }
+    <!-- Story -->
+    <section class="story" id="story">
+      <figure class="story-pic"><img src="/assets/img/m-roast.webp" width="1200" height="1490" loading="lazy" alt="Freshly roasted coffee beans pouring from a steaming cooling tray"></figure>
+      <div class="story-text">
+        <h2 class="reveal">Great coffee, <span class="mark">roasted with care.</span></h2>
+        <p class="lede reveal">We combine expertise, dedication and a love for coffee to craft exceptional roasts, single origins and signature blends.</p>
+        <p class="muted reveal">Every roast starts at our roastery in San Pedro City, Laguna, and ends in your cup or your café.</p>
+        <a class="link reveal" href="/about-us/">Read our story</a>
+      </div>
+    </section>
 
-  .story { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px, 6vw, 80px); align-items: center; }
-  .story img { width: 100%; height: auto; aspect-ratio: 16 / 11; object-fit: cover; border-radius: var(--radius); }
-  .story p { max-width: 46ch; }
+    <!-- Learn -->
+    <section class="section learn" id="learn">
+      <div class="wrap learn-grid">
+        <div>
+          <h2 class="reveal">Brewing guides</h2>
+          <ul class="rows"><Fragment set:html={homeGuidesHtml} /></ul>
+        </div>
+        <div>
+          <h2 class="reveal">The Roast Journal</h2>
+          <ul class="rows"><Fragment set:html={homeJournalHtml} /></ul>
+          <p class="more-line reveal"><a class="link" href="/blogs/">All articles</a> &nbsp;·&nbsp; <a class="link" href="/brewing-guides/">All brewing guides</a></p>
+        </div>
+      </div>
+    </section>
 
-  .tight-top { padding-top: 0; }
-  .lead { margin-bottom: 32px; }
-  .cta-row { margin-top: 36px; }
-
-  .guides { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
-  .guides a { display: block; text-decoration: none; background: var(--cream); border: 1px solid var(--ln); border-radius: var(--radius); overflow: hidden; height: 100%; }
-  .guides a:hover h3 { text-decoration: underline; text-underline-offset: 3px; }
-  .guides img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; background: var(--mist); }
-  .guides h3, .guides p { padding: 0 18px; } .guides h3 { margin: 16px 0 .2em; } .guides p { margin: 0 0 18px; font-size: .95rem; }
-
-  .cta { border-radius: 12px; padding: clamp(32px, 6vw, 72px); background: linear-gradient(90deg, var(--yellow) 45%, rgba(250,238,138,.8)), var(--cta) center / cover; color: var(--ink); }
-  .cta .btn { background: var(--ink); color: var(--yellow); border-color: var(--ink); } .cta .btn:hover { background: var(--white); color: var(--ink); }
-  .cta .btn.outline { background: transparent; color: var(--ink); } .cta .btn.outline:hover { background: var(--ink); color: var(--yellow); }
-  .cta h2 { max-width: 16ch; } .cta p { max-width: 44ch; margin-bottom: 1.4em; }
-
-  @media (max-width: 960px) {
-    .hero-grid, .biz-grid, .story { grid-template-columns: 1fr; }
-    .trust { grid-template-columns: 1fr 1fr; } .guides { grid-template-columns: 1fr 1fr; }
-    .bags { max-width: 520px; }
-  }
-  @media (max-width: 560px) { .trust { grid-template-columns: 1fr; } .guides { grid-template-columns: 1fr; } .bag span { font-size: .8rem; } }
-  @media (prefers-reduced-motion: reduce) { .bag { transition: none; } }
-</style>
+    <!-- Contact -->
+    <section class="section cream" id="contact">
+      <div class="wrap contact">
+        <div class="reveal">
+          <h2>Visit or get in touch</h2>
+          <p class="muted">Questions about an order, wholesale supply or a custom blend? Send a message or call.</p>
+          <dl class="details">
+            <dt>Roastery</dt>
+            <dd>GF FilWeb Asia Bldg., Maharlika Drive, USPS,<br>San Pedro City, Laguna, Philippines<br><a href="https://www.google.com/maps/search/?api=1&amp;query=GF+FilWeb+Asia+Bldg+Maharlika+Drive+San+Pedro+Laguna+Philippines">Open in Google Maps</a></dd>
+            <dt>Call</dt>
+            <dd><a href="tel:+639171663693">0917-1663693</a><br><a href="tel:+63288694428">02-8869-4428</a></dd>
+            <dt>Hours</dt>
+            <dd>Monday to Saturday, 8:00 am to 5:00 pm<br><span class="open-line" data-open-line></span></dd>
+          </dl>
+        </div>
+        <form class="form reveal" id="contact-form" novalidate>
+          <label for="f-name">Name</label>
+          <input id="f-name" name="name" autocomplete="name" required>
+          <label for="f-email">Email</label>
+          <input id="f-email" name="email" type="email" autocomplete="email" required>
+          <label for="f-msg">Message</label>
+          <textarea id="f-msg" name="message" rows="4" required></textarea>
+          <p class="error" id="form-error" role="alert" hidden>Please fill in your name, a valid email and a message.</p>
+          <button class="btn" type="submit">Send message</button>
+          <p class="success" id="form-ok" role="status" hidden>Your email app is opening with your message ready to send. If nothing opens, call 0917-1663693.</p>
+        </form>
+      </div>
+    </section>
+  </Site>

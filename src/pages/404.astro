@@ -1,6 +1,19 @@
 ---
-import Base from '../layouts/Base.astro';
+import Site from '../layouts/Site.astro';
 ---
-<Base title="Page not found">
-  <header class="page-head"><div class="frame"><h1>Page not found</h1><p>The page may have moved. Try our coffee instead.</p><p style="margin-top:1.5rem"><a class="btn" href="/coffee-beans-retail/">Browse coffee</a></p></div></header>
-</Base>
+<Site title="Page not found" description="That page could not be found." path="/404.html">
+  <header class="page-head">
+    <div class="wrap">
+      <h1>Page not found</h1>
+      <p class="lede">That page may have moved. Try the shop or the journal.</p>
+    </div>
+  </header>
+  <section class="section tight">
+    <div class="wrap">
+      <div class="btn-row">
+        <a class="btn" href="/coffee-beans-retail/">Shop coffee</a>
+        <a class="btn btn-ghost" href="/blogs/">Read the journal</a>
+      </div>
+    </div>
+  </section>
+</Site>

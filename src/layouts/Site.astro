@@ -1,0 +1,55 @@
+---
+import '@fontsource-variable/space-grotesk';
+import '../styles/site.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITE } from '../lib/site.mjs';
+
+interface Props {
+  title: string;
+  description?: string;
+  path?: string;
+  image?: string;
+  type?: string;
+  preload?: string;
+}
+const { title, description = '', path = '/', image, type = 'website', preload } = Astro.props;
+const fullTitle = title.includes('Daily Grind Roastery') ? title : `${title} | Daily Grind Roastery`;
+const ogImage = image ? (image.startsWith('http') ? image : SITE + image) : SITE + '/assets/img/og.jpg';
+const desc = description.slice(0, 160);
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={desc} />
+    <meta name="theme-color" content="#FBF9EE" />
+    <link rel="canonical" href={SITE + path} />
+    <meta property="og:type" content={type} />
+    <meta property="og:site_name" content="Daily Grind Roastery" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={desc} />
+    <meta property="og:url" content={SITE + path} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    {preload && <link rel="preload" as="image" href={preload} type="image/webp" />}
+    <script is:inline>document.documentElement.classList.add('js')</script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <Header path={path} />
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <Footer />
+    <script>
+      import '../scripts/main.js';
+    </script>
+  </body>
+</html>

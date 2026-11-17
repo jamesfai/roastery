@@ -1,0 +1,16 @@
+---
+// Every product, collection, article, category and info page. The content is built from the
+// WordPress exports in media/export/ (see src/lib/site.mjs).
+import Site from '../layouts/Site.astro';
+import { routes } from '../lib/site.mjs';
+
+export function getStaticPaths() {
+  return routes
+    .filter((r) => r.path !== '/' && r.path !== '/404.html')
+    .map((r) => ({ params: { slug: r.path.replace(/^\/|\/$/g, '') }, props: { page: r } }));
+}
+const { page } = Astro.props;
+---
+<Site title={page.title} description={page.description} path={page.path} image={page.image} type={page.type}>
+  <Fragment set:html={page.body} />
+</Site>

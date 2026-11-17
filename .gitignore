@@ -30,3 +30,8 @@ pnpm-debug.log*
 src/lib/sample.ts
 .env.local
 src/lib/sample.snapshot.json
+
+# raw source photos, generated originals and local tool settings (not needed to build)
+assets/
+.claude/
+tools/.cache/

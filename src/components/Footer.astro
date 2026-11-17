@@ -1,70 +1,44 @@
 ---
-import { logoUrl } from '../lib/wp';
-import Newsletter from './Newsletter.astro';
-const logo = logoUrl;
-const year = new Date().getFullYear();
-const social = [
-  { name: 'Facebook', href: 'https://facebook.com/DailyGrindRoastery/', d: 'M14 8h3V4h-3a4 4 0 0 0-4 4v2H7v4h3v7h4v-7h3l1-4h-4V8z' },
-  { name: 'Instagram', href: 'https://instagram.com/dailygrindroastery/', d: 'M7 3h10a4 4 0 0 1 4 4v10a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V7a4 4 0 0 1 4-4zm5 5a4 4 0 1 0 0 8 4 4 0 0 0 0-8zm5.5-1.5h.01' },
-];
+import { STORE } from '../lib/site.mjs';
 ---
-<footer class="ink">
-  <div class="frame pad main">
-    <div class="brand">
-      <img src={logo} alt="Daily Grind Roastery" width="123" height="44" />
-      <p class="muted">Expertly roasted coffee beans for every brew.</p>
+<footer class="site-footer">
+  <div class="wrap foot-grid">
+    <div class="foot-brand">
+      <img src="/assets/img/logo.webp" alt="Daily Grind Roastery" width="123" height="44" loading="lazy" />
+      <p>Expertly roasted coffee beans for every brew.</p>
       <ul class="social">
-        {social.map((s) => (
-          <li><a href={s.href} rel="noopener" aria-label={s.name}>
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={s.d} /></svg>
-          </a></li>
-        ))}
+        <li><a href="https://facebook.com/DailyGrindRoastery/" rel="noopener" aria-label="Daily Grind Roastery on Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8h3V4h-3a4 4 0 0 0-4 4v2H7v4h3v7h4v-7h3l1-4h-4V8z" /></svg></a></li>
+        <li><a href="https://instagram.com/dailygrindroastery/" rel="noopener" aria-label="Daily Grind Roastery on Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10a4 4 0 0 1 4 4v10a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V7a4 4 0 0 1 4-4zm5 5a4 4 0 1 0 0 8 4 4 0 0 0 0-8zm5.5-1.5h.01" /></svg></a></li>
       </ul>
     </div>
-    <nav aria-label="Shop"><h3>Shop</h3><ul>
-      <li><a href="/coffee-beans-retail/">All retail</a></li>
-      <li><a href="/coffee-beans-retail/single-origin/">Single Origin</a></li>
-      <li><a href="/coffee-beans-retail/house-blend/">House Blend</a></li>
-      <li><a href="/coffee-beans-retail/drip-coffee/">Drip Coffee</a></li>
-      <li><a href="/wholesale-coffee-beans/">Wholesale</a></li>
-    </ul></nav>
-    <nav aria-label="About"><h3>About</h3><ul>
-      <li><a href="/about-us/">Our story</a></li>
-      <li><a href="/brewing-guides/">Brewing guides</a></li>
-      <li><a href="/blogs/">The Roast Journal</a></li>
-      <li><a href="/faqs/">FAQs</a></li>
-      <li><a href="/contact-us/">Contact</a></li>
-    </ul></nav>
-    <nav aria-label="Support"><h3>Support</h3><ul>
-      <li><a href="/shipping-policy/">Shipping</a></li>
-      <li><a href="/refund-policy/">Refunds</a></li>
-      <li><a href="/privacy-policy/">Privacy</a></li>
-      <li><a href="/terms-and-conditions/">Terms</a></li>
-    </ul></nav>
-    <div class="visit">
-      <h3>Visit</h3>
-      <address>GF FilWeb Asia Bldg., Maharlika Drive, USPS, San Pedro City, Laguna, Philippines</address>
-      <p class="muted">Mon–Sat, 8:00 am – 5:00 pm<br />0917-1663693 · 02-8869-4428</p>
-    </div>
+    <nav aria-label="Shop">
+      <h3>Shop</h3>
+      <ul>
+        <li><a href="/coffee-beans-retail/">Retail coffee</a></li>
+        <li><a href="/coffee-beans-retail/drip-coffee/">Drip coffee</a></li>
+        <li><a href="/wholesale-coffee-beans/">Wholesale</a></li>
+        <li><a href={`${STORE}/account/`}>My account</a></li>
+      </ul>
+    </nav>
+    <nav aria-label="Company">
+      <h3>Company</h3>
+      <ul>
+        <li><a href="/about-us/">About us</a></li>
+        <li><a href="/brewing-guides/">Brewing guides</a></li>
+        <li><a href="/blogs/">The Roast Journal</a></li>
+        <li><a href="/faqs/">FAQs</a></li>
+        <li><a href="/contact-us/">Contact us</a></li>
+      </ul>
+    </nav>
+    <nav aria-label="Policies">
+      <h3>Policies</h3>
+      <ul>
+        <li><a href="/shipping-policy/">Shipping</a></li>
+        <li><a href="/refund-policy/">Refunds</a></li>
+        <li><a href="/privacy-policy/">Privacy</a></li>
+        <li><a href="/terms-and-conditions/">Terms</a></li>
+      </ul>
+    </nav>
   </div>
-  <Newsletter variant="footer" />
-  <div class="frame pad legal"><p>© {year} Daily Grind Roastery. All rights reserved.</p></div>
+  <div class="wrap legal"><p>© <span id="year">2026</span> Daily Grind Roastery. All rights reserved.</p></div>
 </footer>
-<style>
-  footer { padding-top: clamp(48px, 7vw, 80px); }
-  .main { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr 1.4fr; gap: 32px; }
-  .brand img { height: 44px; width: auto; filter: brightness(0) invert(1); margin-bottom: 16px; }
-  .brand p { max-width: 24ch; }
-  h3 { font-size: .85rem; letter-spacing: .08em; text-transform: uppercase; color: var(--yellow); margin-bottom: 1em; }
-  ul { list-style: none; padding: 0; margin: 0; }
-  nav li a { display: inline-block; padding: 5px 0; text-decoration: none; font-size: .95rem; color: var(--muted-on-ink); }
-  nav li a:hover { color: var(--yellow); }
-  address { font-style: normal; color: var(--muted-on-ink); font-size: .95rem; margin-bottom: 1em; }
-  .social { display: flex; gap: 8px; }
-  .social a { display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid var(--ln-on-ink); border-radius: 6px; }
-  .social a:hover { background: var(--yellow); color: var(--ink); border-color: var(--yellow); }
-  .legal { margin-top: 48px; padding-top: 20px; padding-bottom: 28px; border-top: 1px solid var(--ln-on-ink); font-size: .85rem; color: var(--muted-on-ink); }
-  .legal p { margin: 0; }
-  @media (max-width: 960px) { .main { grid-template-columns: 1fr 1fr 1fr; } .brand { grid-column: 1 / -1; } }
-  @media (max-width: 560px) { .main { grid-template-columns: 1fr 1fr; } .visit { grid-column: 1 / -1; } }
-</style>
